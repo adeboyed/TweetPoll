@@ -3,19 +3,18 @@
 	<head>
 		<meta charset="utf-8">
 		<title>TweetPoll</title>
-		<meta name="description" content="Flat UI Kit Free is a Twitter Bootstrap Framework design and Theme, this responsive framework includes a PSD and HTML version."/>
-		<meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
+		<meta name="viewport" content="width=100%, initial-scale=1.0, maximum-scale=1.0">
 		<!-- Loading Bootstrap -->
-		<link href="css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<!-- <link href="css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
 		<!-- Loading Flat UI -->
 		<link href="css/flat-ui.css" rel="stylesheet">
-		<link href="css/demo.css" rel="stylesheet" type="text/css" >
+		<link href="css/index.css" rel="stylesheet" type="text/css" >
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
 		<!--[if lt IE 9]>
 		<script src="dist/js/vendor/html5shiv.js"></script>
 		<script src="dist/js/vendor/respond.min.js"></script>
 		<![endif]-->
-		
+
 		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
@@ -36,49 +35,77 @@
 		<meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
 		<meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
 		<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+		<script src="js/vendor/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 
+		</script>
 	</head>
 	<body>
-		<div class="container">
+		<div id="page-container">
+			<h1>TweetPoll</h1>
+			<div id="page-graph">
 
-			<h1 class="demo-logo">TweetPoll
-			<small>Tagline</small>
-			</h1>
-			
-			<div id="content">
-				<div class="row">
-					<div class="col-xs-6">
-						<h3>Topic 1</h3>
-						<input type="text" value="" class="form-control" >
-					</div>
-					<div class="col-xs-3 col-xs-offset-3">
-						<br>
-						<div class="btn-toolbar">
-							<div class="btn-group">
-								<a class="btn btn-primary" href="#fakelink"><span class="fui-time"></span></a>
-							</div>
-						</div> <!-- /toolbar -->
-					</div>
-				</div>
-				<div style="height: 50px"></div>
-				<div class="row">
-					<div class="col-xs-3 col-xs-offset-9">
-						<a href="" class="btn btn-block btn-lg btn-primary">Submit</a>
-					</div>
-				</div>
 			</div>
-
+			<div class="search-element-group display-none" id="search-element-group">
+				<h2 class="search-element-search">Jeremy Corbyn</h2>
+				<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
+				<div class="search-element-bars">
+					<div class="search-element-loading">
+						<div class="search-element-loading-overlay"></div>
+					</div>
+					<div class="search-element-percentage">
+						<div class="search-element-green"></div>
+						<div class="search-element-red"></div>
+					</div>
+				</div>
+				<h3 class="search-percent-green">23%</h3>
+				<h3 class="search-percent-red">77%</h3>
+			</div>
 		</div>
-		<!-- /container -->
-		<script src="js/vendor/jquery.min.js"></script>
-		<script src="js/flat-ui.min.js"></script>
 		<script>
-			$(document).ready(function() { 
-				// bind 'myForm' and provide a simple callback function 
-				$('#myForm').ajaxForm(function() { 
-					alert("Thank you for your comment!"); 
-				}); 
-			}); 
+			var searches = [
+				['Jeremy Corbyn', '3 hours ago', 23],
+				['Theresa May', '1 hour ago', 88],
+				['Donald Trump', '10 minutes ago', 32],
+				['Harry Maughan', '5 hours ago', 44],
+				['David Adeboye', '45 minutes ago', 23],
+				['Devavrata Soni', '13 minutes ago', 9],
+			];
+			function createSearch(name, updateTime, greenPercent) {
+				var $searchBlock = $("#search-element-group").clone();
+				$searchBlock.appendTo("#page-container");
+				$searchBlock.find(".search-percent-green").html(greenPercent.toString().concat("%"));
+				$searchBlock.find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
+				$searchBlock.find(".search-element-search").html(name);
+				$searchBlock.find(".search-element-updated").html("Last Updated: ".concat(updateTime));
+				$searchBlock.removeClass("display-none");
+			};
+			$(document).ready(function() {
+				function getRandomInt(min, max) {
+				  min = Math.ceil(min);
+				  max = Math.floor(max);
+				  return Math.floor(Math.random() * (max - min)) + min;
+				}
+				for (search of searches) {
+					createSearch(search[0], search[1], search[2]);
+				};
+				$(".search-element-group").each(function() {
+					var loadingTime = getRandomInt(1500, 2500);
+					var greenNum = getRandomInt(5, 95);
+					$(this).find(".search-element-loading-overlay").animate({
+						width: "100%",
+					}, loadingTime).delay(loadingTime).fadeOut();
+					$(this).find(".search-element-loading").delay(loadingTime).fadeOut();
+					$(this).find(".search-element-red").delay(loadingTime).animate({
+						width: $(this).find(".search-percent-red").text(),
+					}, 1000);
+					$(this).find(".search-element-green").delay(loadingTime).animate({
+						width: $(this).find(".search-percent-green").text(),
+					}, 1000);
+					$(this).find(".search-percent-red").delay(loadingTime).fadeIn();
+					$(this).find(".search-percent-green").delay(loadingTime).fadeIn();
+				});
+			});
 		</script>
 	</body>
 </html>
