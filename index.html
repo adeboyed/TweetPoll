@@ -10,12 +10,33 @@
 		<!-- Loading Flat UI -->
 		<link href="css/flat-ui.css" rel="stylesheet">
 		<link href="css/demo.css" rel="stylesheet" type="text/css" >
-		<link rel="shortcut icon" href="img/favicon.ico">
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
 		<!--[if lt IE 9]>
 		<script src="dist/js/vendor/html5shiv.js"></script>
 		<script src="dist/js/vendor/respond.min.js"></script>
 		<![endif]-->
+		
+		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144x144.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="60x60" href="images/apple-touch-icon-60x60.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="120x120" href="images/apple-touch-icon-120x120.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="76x76" href="images/apple-touch-icon-76x76.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/apple-touch-icon-152x152.png" />
+		<link rel="icon" type="image/png" href="images/favicon-196x196.png" sizes="196x196" />
+		<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+		<link rel="icon" type="image/png" href="images/favicon-128.png" sizes="128x128" />
+		<meta name="application-name" content="&nbsp;"/>
+		<meta name="msapplication-TileColor" content="#FFFFFF" />
+		<meta name="msapplication-TileImage" content="mstile-144x144.png" />
+		<meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+		<meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+		<meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+		<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
 	</head>
 	<body>
 		<div class="container">
@@ -24,24 +45,26 @@
 			<small>Tagline</small>
 			</h1>
 			
-			<h3></h3>
-
-			<div class="row">
-				<div class="col-xs-6">
-					<h3>Topic 1</h3>
-					<input type="text" value="" class="form-control" >
+			<div id="content">
+				<div class="row">
+					<div class="col-xs-6">
+						<h3>Topic 1</h3>
+						<input type="text" value="" class="form-control" >
+					</div>
+					<div class="col-xs-3 col-xs-offset-3">
+						<br>
+						<div class="btn-toolbar">
+							<div class="btn-group">
+								<a class="btn btn-primary" href="#fakelink"><span class="fui-time"></span></a>
+							</div>
+						</div> <!-- /toolbar -->
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-6">
-					<h3>Topic 2</h3>
-					<input type="text" value="" class="form-control" >
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-xs-3 col-xs-offset-9">
-          			<a href="#fakelink" class="btn btn-block btn-lg btn-primary">Submit</a>
+				<div style="height: 50px"></div>
+				<div class="row">
+					<div class="col-xs-3 col-xs-offset-9">
+						<a href="" class="btn btn-block btn-lg btn-primary">Submit</a>
+					</div>
 				</div>
 			</div>
 
@@ -49,5 +72,13 @@
 		<!-- /container -->
 		<script src="js/vendor/jquery.min.js"></script>
 		<script src="js/flat-ui.min.js"></script>
+		<script>
+			$(document).ready(function() { 
+				// bind 'myForm' and provide a simple callback function 
+				$('#myForm').ajaxForm(function() { 
+					alert("Thank you for your comment!"); 
+				}); 
+			}); 
+		</script>
 	</body>
 </html>
