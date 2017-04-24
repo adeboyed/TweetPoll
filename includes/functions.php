@@ -48,10 +48,32 @@
 	function generateNewResult( $query ) {
 		$tweets = getTweets( $query );
 		
+		$positive = 0;
+		$negative = 0;
+		
+		foreach ( $tweets as &$value ){
+			$score = naiveBayes ( $value );
+			
+			if ( $score >= 0.5 ){
+				$positive++;
+			}else {
+				$negative++;
+			}
+			
+		}
+		
+		
+		
 	}
 
 	function getTweets( $query ){
+		$array = [
+			'I am a tweet',
+			'I am also a tweet',
+			'I am also a tweet'
+		];
 		
+		return $array;
 	}
 
 	function naiveBayes( $text ){
