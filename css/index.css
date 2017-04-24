@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
@@ -32,132 +32,49 @@ body {
 	display: flex;
 	justify-content: center;
 	position: relative;
-	padding-bottom: 20px;
 
 }
 
 #bg-img {
-	background-image: url("../images/background_grey_contrast.jpg");
-	background-attachment: fixed;
+	background-image: url("../images/background_1280.jpg");
+	background-position: bottom;
 	background-repeat: no-repeat;
 	background-size: cover;
-	width: 100%;
-	height: 100%;
-	position: absolute;
+	width: 100vw;
+	height: 100vh;
 }
 
 #bg-overlay {
-	background-color: rgba(26, 26, 26, 0.8);
+	background-color: rgba(26, 26, 26, 0.5);
 	position: absolute;
 	width: 100%;
 	height: 100%;
 
 }
 
-.bg-tweet {
-	height: 150px;
-	width: auto;
-	position: relative;
-}
-
-#bg-tweets {
+#main-title {
+	font-family: 'Ranga', cursive;
 	position: absolute;
-	width: 100%;
-	height: 100%;
+	top: 250px;
+	font-size: 80pt;
 }
 
-/*Classes for animating the background tweets*/
-.tweet-x1 {
-	top: 20%;
-	-webkit-animation: moveclouds 15s linear infinite;
-	-moz-animation: moveclouds 15s linear infinite;
-	-o-animation: moveclouds 15s linear infinite;
-	-webkit-filter: blur(3px);
-  -moz-filter: blur(3px);
-  -o-filter: blur(3px);
-  -ms-filter: blur(3px);
-  filter: blur(3px);
+#main-search-box {
+	position: absolute;
+	background-color: white;
+	outline: none;
+	height: 70px;
+	width: 630px;
+	top: 400px;
+	border-radius: 50px;
+	font-size: 30pt;
+	padding-left: 30px;
+	font-family: 'Fira Sans', 'Helvetica', 'Arial', sans-serif;
+	color: lightgrey;
 }
 
-.tweet-x2 {
-	top: 35%;
-
-	-webkit-transform: scale(0.3);
-	-moz-transform: scale(0.3);
-	transform: scale(0.3);
-	opacity: 0.4;
-	-webkit-animation: moveclouds 25s linear infinite;
-	-moz-animation: moveclouds 25s linear infinite;
-	-o-animation: moveclouds 25s linear infinite;
-	-webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
-}
-
-.tweet-x3 {
-	top: 55%;
-
-	-webkit-transform: scale(0.6);
-	-moz-transform: scale(0.6);
-	transform: scale(0.6);
-	opacity: 0.6;
-	-webkit-animation: moveclouds 20s linear infinite;
-	-moz-animation: moveclouds 20s linear infinite;
-	-o-animation: moveclouds 20s linear infinite;
-	-webkit-filter: blur(4px);
-  -moz-filter: blur(4px);
-  -o-filter: blur(4px);
-  -ms-filter: blur(4px);
-  filter: blur(4px);
-}
-
-.tweet-x4 {
-	top: 65%;
-
-	-webkit-transform: scale(0.5);
-	-moz-transform: scale(0.5);
-	transform: scale(0.5);
-	opacity: 0.5;
-	-webkit-animation: moveclouds 18s linear infinite;
-	-moz-animation: moveclouds 18s linear infinite;
-	-o-animation: moveclouds 18s linear infinite;
-	-webkit-filter: blur(4px);
-  -moz-filter: blur(4px);
-  -o-filter: blur(4px);
-  -ms-filter: blur(4px);
-  filter: blur(4px);
-}
-
-.tweet-x5 {
-	top: 80%;
-
-	-webkit-transform: scale(0.6);
-	-moz-transform: scale(0.6);
-	transform: scale(0.6);
-	opacity: 0.6;
-	-webkit-animation: moveclouds 20s linear infinite;
-	-moz-animation: moveclouds 20s linear infinite;
-	-o-animation: moveclouds 20s linear infinite;
-	-webkit-filter: blur(4px);
-  -moz-filter: blur(4px);
-  -o-filter: blur(4px);
-  -ms-filter: blur(4px);
-  filter: blur(4px);
-}
-
-@-webkit-keyframes moveclouds {
-	0% {transform: translateX(-20vw);}
-	100% {transform: translateX(120vw);}
-}
-@-moz-keyframes moveclouds {
-	0% {transform: translateX(-20vw);}
-	100% {transform: translateX(120vw);}
-}
-@-o-keyframes moveclouds {
-	0% {transform: translateX(-20vw);}
-	100% {transform: translateX(120vw);}
+#tagline {
+	margin-top: 0;
 }
 
 #page-container {
@@ -167,12 +84,13 @@ body {
 	height: 100%;
 	padding-left: 50px;
 	padding-right: 50px;
-	left: calc(50% - 400px);
 	background-color: rgba(1, 1, 1, 0.7);
 	border-left: 1px solid lightgrey;
 	border-right: 1px solid lightgrey;
 	z-index: 2;
 	margin-bottom: -20px;
+	top: 100vh;
+	position: absolute;
 }
 
 #page-graph {
