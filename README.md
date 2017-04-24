@@ -6,7 +6,7 @@
 - Harri Bell-Thomas : Getting the tweets
 - Henry Mattinson : Naive Bayes
 - Carlos Purves : Implementing a TweetPoll twitter page
-- Ben Cunrow : UX Designer
+- Ben Curnow : UX Designer
 - Matthew Allsop : UX Designer
 
 ## General Details
