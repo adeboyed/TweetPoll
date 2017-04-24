@@ -43,9 +43,9 @@
 	<body>
 		<div id="page-container">
 			<h1>TweetPoll</h1>
-			<div id="page-graph">
+			<canvas id="page-graph">
 
-			</div>
+			</canvas>
 			<div class="search-element-group display-none" id="search-element-group">
 				<h2 class="search-element-search">Jeremy Corbyn</h2>
 				<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
@@ -90,7 +90,7 @@
 					createSearch(search[0], search[1], search[2]);
 				};
 				$(".search-element-group").each(function() {
-					var loadingTime = getRandomInt(1500, 2500);
+					var loadingTime = getRandomInt(1000, 5000);
 					var greenNum = getRandomInt(5, 95);
 					$(this).find(".search-element-loading-overlay").animate({
 						width: "100%",
@@ -106,6 +106,61 @@
 					$(this).find(".search-percent-green").delay(loadingTime).fadeIn();
 				});
 			});
+		</script>
+		<script>
+		var graph_data = [
+			['Jeremy Corbyn', [1, 7, 5, 8, 11, 23]],
+			['Theresa May', [56, 64, 48, 57, 71, 88]],
+			['Donald Trump', [23, 34, 27, 24, 30, 34]]
+		]
+		var colors = [
+			["rgba(219, 45, 45, 0.2)", "rgba(219, 45, 45, 1)"],
+			["rgba(45, 45, 219, 0.2)", "rgba(45, 45, 219 1)"],
+			["rgba(23, 139, 81, 0.2)", "rgba(23, 139, 81, 1)"]
+		]
+		var graph = document.getElementById("page-graph");
+		var myChart = new Chart(graph, {
+		    type: 'line',
+		    data: {
+		        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+		        datasets: []
+		    },
+				options: {
+            scaleFontColor: 'red',
+		        responsive: true,
+		        tooltips: {
+		            mode: 'single',
+		        },
+						legend: {
+								labels: {fontColor:"lightgrey"}},
+		        scales: {
+		            xAxes: [{
+		                gridLines: {
+		                    display: false,
+		                },
+		                ticks: {
+		                  fontColor: "#CCC", // this here
+		                },
+		            }],
+		            yAxes: [{
+										ticks: {
+		                    beginAtZero:true,
+												fontColor: "#CCC"
+		                },
+		            }],
+		        }
+    		}
+		});
+		for (i in graph_data) {
+			myChart.data.datasets.push({
+					label: graph_data[i][0],
+					data: graph_data[i][1],
+					backgroundColor: [colors[i][0]],
+					borderColor: [colors[i][1]],
+					borderWidth: 1
+			});
+			myChart.update();
+		}
 		</script>
 	</body>
 </html>
