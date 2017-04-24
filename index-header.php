@@ -2,15 +2,15 @@
 
 	$ignore = true;
 	session_start();
-	require_once( 'functions.php' );
+	require_once( 'includes/functions.php' );
 	
 	$searchItems = array();
 
 	if ( isset( $_GET['p1'] ) ){
 		
 		$ignore = false;
-		$searchItem = filter_input(INPUT_POST, 'p1');
-		$searchItem = strip_tags( trim( $searchItem1 ) );
+		$searchItem = filter_input(INPUT_GET, 'p1');
+		$searchItem = strip_tags( trim( $searchItem ) );
 		if ( !$searchItem ) $ignore = true;
 		if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ) $ignore = true;
 		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
@@ -23,8 +23,8 @@
 	if ( isset( $_GET['p2'] ) ){
 		
 		$ignore = false;
-		$searchItem = filter_input(INPUT_POST, 'p2');
-		$searchItem = strip_tags( trim( $searchItem1 ) );
+		$searchItem = filter_input(INPUT_GET, 'p2');
+		$searchItem = strip_tags( trim( $searchItem ) );
 		if ( !$searchItem ) $ignore = true;
 		if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ) $ignore = true;
 		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
@@ -37,8 +37,8 @@
 	if ( isset( $_GET['p3'] ) ){
 		
 		$ignore = false;
-		$searchItem = filter_input(INPUT_POST, 'p3');
-		$searchItem = strip_tags( trim( $searchItem1 ) );
+		$searchItem = filter_input(INPUT_GET, 'p3');
+		$searchItem = strip_tags( trim( $searchItem ) );
 		if ( !$searchItem ) $ignore = true;
 		if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ) $ignore = true;
 		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
@@ -51,8 +51,8 @@
 	if ( isset( $_GET['p4'] ) ){
 		
 		$ignore = false;
-		$searchItem = filter_input(INPUT_POST, 'p4');
-		$searchItem = strip_tags( trim( $searchItem1 ) );
+		$searchItem = filter_input(INPUT_GET, 'p4');
+		$searchItem = strip_tags( trim( $searchItem ) );
 		if ( !$searchItem ) $ignore = true;
 		if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ) $ignore = true;
 		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
@@ -65,8 +65,8 @@
 	if ( isset( $_GET['p5'] ) ){
 		
 		$ignore = false;
-		$searchItem = filter_input(INPUT_POST, 'p5');
-		$searchItem = strip_tags( trim( $searchItem1 ) );
+		$searchItem = filter_input(INPUT_GET, 'p5');
+		$searchItem = strip_tags( trim( $searchItem ) );
 		if ( !$searchItem ) $ignore = true;
 		if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ) $ignore = true;
 		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;

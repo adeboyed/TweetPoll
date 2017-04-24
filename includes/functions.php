@@ -1,6 +1,7 @@
 <?php
 
 	require_once( 'config.php' );
+	require_once( 'exportClass.php' );
 
 	if ( !isset( $ignore ) ){
 		header("Location: https://tweetpoll.co/");
@@ -30,7 +31,7 @@
 			}else {
 				$stmt->close();
 				$json = generateNewResult ( $value );
-				array_push ( $resultItems, $json );
+				array_push ( $returnItems, $json );
 
 				$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_result ( search_query, search_time, search_items ) VALUES ( ? , ? , NOW() ) ");
 				$stmtAdd->bind_param('ss', $value, json_encode( $json ) );
@@ -40,16 +41,18 @@
 		}
 		
 		
-		echo json_encode( $resultItems );
+		echo json_encode( $returnItems );
 
 		$mysqli_conn->close();
 	}
 
 	function generateNewResult( $query ) {
-		$tweets = getTweets( $query );
+		$tweets = getTweets( $query, 100 );
 		
 		$positive = 0;
 		$negative = 0;
+		
+		$result = new exportClass;
 		
 		foreach ( $tweets as &$value ){
 			$score = naiveBayes ( $value );
@@ -62,20 +65,25 @@
 			
 		}
 		
+		$result->query = $query;
+		$result->positive = $positive;
+		$result->negative = $negative;
+		$result->timeAgo = "Just Now";
 		
-		
+		return $result;
 	}
 
-	function getTweets( $query ){
-		$array = [
-			'I am a tweet',
-			'I am also a tweet',
-			'I am also a tweet'
-		];
+	function getTweets( $query, $num ){
+		$array = array();
+		
+		for ( $i = 0; $i < 100; $i++ ){
+			$text = 'I am a tweet';
+			array_push( $array, $text );
+		}
 		
 		return $array;
 	}
 
 	function naiveBayes( $text ){
-		
+		return mt_rand() / mt_getrandmax();
 	}
