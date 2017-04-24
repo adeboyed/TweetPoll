@@ -12,7 +12,7 @@ copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -56,27 +56,21 @@ SOFTWARE. -->
 		<meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
 		<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
     <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
+		<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
 		<script src="js/vendor/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 		<!-- <script type="text/javascript" src-"js/jquery.foggy.min.js"></script> -->
 		<script type="text/javascript" src="js/velocity.min.js"></script>
 	</head>
 	<body>
-		<canvas id="bg-img"></canvas>
+		<div id="bg-img"></div>
 		<div id="bg-overlay"></div>
-		<div id="bg-tweets">
-			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x1">
-			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x2">
-			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x3">
-			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x4">
-			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x5">
-		</div>
-		<div id="page-container">
-			<h1>TweetPoll</h1>
-			<canvas id="page-graph">
+		<h1 id="main-title">TweetPoll</h1>
+		<input type="text" name="" id="main-search-box"
+			maxlength="28" placeholder="Query the opinion harvester...">
 
-			</canvas>
-			<div class="search-element-group display-none" id="search-element-group">
+		<div id="searches-container">
+			<div class="search-element-group-template display-none">
 				<h2 class="search-element-search">Jeremy Corbyn</h2>
 				<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
 				<div class="search-element-bars">
@@ -92,55 +86,101 @@ SOFTWARE. -->
 				<h3 class="search-percent-red">77%</h3>
 			</div>
 		</div>
+
+		<!-- <div id="page-container">
+			<h1>TweetPoll</h1>
+			<h2 id="tagline">The voice of the people</h2>
+			<div id="search-container">
+				<div class="search-element-group display-none" id="search-element-group">
+					<h2 class="search-element-search">Jeremy Corbyn</h2>
+					<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
+					<div class="search-element-bars">
+						<div class="search-element-loading">
+							<div class="search-element-loading-overlay"></div>
+						</div>
+						<div class="search-element-percentage">
+							<div class="search-element-green"></div>
+							<div class="search-element-red"></div>
+						</div>
+					</div>
+					<h3 class="search-percent-green">23%</h3>
+					<h3 class="search-percent-red">77%</h3>
+				</div>
+			</div>
+
+
+			<canvas id="page-graph">
+
+			</canvas>
+		</div> -->
+
 		<script>
 			var searches = [
 				['Jeremy Corbyn', '3 hours ago', 23],
-				['Theresa May', '1 hour ago', 88],
+				['Theresa May', '1 hour ago', 12],
 				['Donald Trump', '10 minutes ago', 32],
 				['Harry Maughan', '5 hours ago', 44],
 				['David Adeboye', '45 minutes ago', 23],
-				['Devavrata Soni', '13 minutes ago', 9],
+				['Devavrata Soni', '13 minutes ago', 4],
 			];
+			function getRandomInt(min, max) {
+			  min = Math.ceil(min);
+			  max = Math.floor(max);
+			  return Math.floor(Math.random() * (max - min)) + min;
+			};
 			function createSearch(name, updateTime, greenPercent) {
-				var $searchBlock = $("#search-element-group").clone();
-				$searchBlock.appendTo("#page-container");
+				var $searchBlock = $(".search-element-group-template").clone();
+				$searchBlock.removeClass("search-element-group-template");
+				$searchBlock.addClass("search-element-group");
+				$searchBlock.prependTo("#searches-container");
 				$searchBlock.find(".search-percent-green").html(greenPercent.toString().concat("%"));
 				$searchBlock.find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
 				$searchBlock.find(".search-element-search").html(name);
 				$searchBlock.find(".search-element-updated").html("Last Updated: ".concat(updateTime));
 				$searchBlock.removeClass("display-none");
+				return $searchBlock;
+			};
+			function animateSearch($element) {
+				var loadingTime = getRandomInt(1000, 5000);
+				var greenNum = getRandomInt(5, 95);
+				$($element).find(".search-element-loading-overlay").velocity({
+					width: "100%",
+				}, loadingTime).delay(loadingTime).fadeOut();
+				$($element).find(".search-element-loading").delay(loadingTime).fadeOut();
+				$($element).find(".search-element-red").delay(loadingTime).velocity({
+					width: $($element).find(".search-percent-red").text(),
+				}, 1000);
+				$($element).find(".search-element-green").delay(loadingTime).velocity({
+					width: $($element).find(".search-percent-green").text(),
+				}, 1000);
+				$($element).find(".search-percent-red").delay(loadingTime).fadeIn();
+				$($element).find(".search-percent-green").delay(loadingTime).fadeIn();
 			};
 			$(document).ready(function() {
-				function getRandomInt(min, max) {
-				  min = Math.ceil(min);
-				  max = Math.floor(max);
-				  return Math.floor(Math.random() * (max - min)) + min;
-				}
 				for (search of searches) {
 					createSearch(search[0], search[1], search[2]);
 				};
 				$(".search-element-group").each(function() {
-					var loadingTime = getRandomInt(1000, 5000);
-					var greenNum = getRandomInt(5, 95);
-					$(this).find(".search-element-loading-overlay").velocity({
-						width: "100%",
-					}, loadingTime).delay(loadingTime).fadeOut();
-					$(this).find(".search-element-loading").delay(loadingTime).fadeOut();
-					$(this).find(".search-element-red").delay(loadingTime).velocity({
-						width: $(this).find(".search-percent-red").text(),
-					}, 1000);
-					$(this).find(".search-element-green").delay(loadingTime).velocity({
-						width: $(this).find(".search-percent-green").text(),
-					}, 1000);
-					$(this).find(".search-percent-red").delay(loadingTime).fadeIn();
-					$(this).find(".search-percent-green").delay(loadingTime).fadeIn();
+					animateSearch(this);
 				});
 			});
 		</script>
+		<script type="text/javascript">
+		$('#main-search-box').keypress(function (e) {
+				if (e.which == 13) {
+					var boxValue = $("#main-search-box").val();
+					$("#main-search-box").val("");
+					var searchBlock = createSearch(boxValue, '10 hours ago', 20);
+					animateSearch(searchBlock);
+					return false;
+				};
+		});
+		</script>
+		<!-- Graph create script -->
 		<script>
 		var graph_data = [
 			['Jeremy Corbyn', [1, 7, 5, 8, 11, 23]],
-			['Theresa May', [56, 64, 48, 57, 71, 88]],
+			['Theresa May', [56, 64, 48, 57, 71, 12]],
 			['Donald Trump', [23, 34, 27, 24, 30, 34]]
 		]
 		var colors = [
