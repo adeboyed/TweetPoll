@@ -17,15 +17,16 @@
 		$returnItems = array();
 
 		foreach ($searchItems as &$value) {
-			$stmt = $mysqli_conn->prepare("SELECT search_result FROM search_items WHERE search_query = ? AND search_time > DATEADD(HOUR, -1, GETDATE()) LIMIT 1");
+			$stmt = $mysqli_conn->prepare("SELECT search_result, search_time FROM search_items WHERE search_query = ? AND search_time > DATEADD(HOUR, -1, GETDATE()) LIMIT 1");
 			$stmt->bind_param('s', $value );
 			$stmt->execute();
 			$stmt->store_result();
-			$stmt->bind_result( $result );
+			$stmt->bind_result( $result, $time );
 			$stmt->fetch();
 
 			if ( $stmt->num_rows == 1 ){
 				$json = json_decode ( $result );
+				$json->timeAgo = time_elapsed_string( $time );
 				array_push( $resultItems, $json );
 				$stmt->close();
 			}else {
@@ -44,6 +45,35 @@
 		echo json_encode( $returnItems );
 
 		$mysqli_conn->close();
+	}
+
+	function time_elapsed_string($datetime, $full = false) {
+		$now = new DateTime;
+		$ago = new DateTime($datetime);
+		$diff = $now->diff($ago);
+
+		$diff->w = floor($diff->d / 7);
+		$diff->d -= $diff->w * 7;
+
+		$string = array(
+			'y' => 'year',
+			'm' => 'month',
+			'w' => 'week',
+			'd' => 'day',
+			'h' => 'hour',
+			'i' => 'minute',
+			's' => 'second',
+		);
+		foreach ($string as $k => &$v) {
+			if ($diff->$k) {
+				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+			} else {
+				unset($string[$k]);
+			}
+		}
+
+		if (!$full) $string = array_slice($string, 0, 1);
+		return $string ? implode(', ', $string) . ' ago' : 'just now';
 	}
 
 	function generateNewResult( $query ) {
