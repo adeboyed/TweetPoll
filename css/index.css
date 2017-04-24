@@ -19,7 +19,7 @@ body {
 }
 
 #bg-img {
-	background-image: url("../images/background_greyscale.jpg");
+	background-image: url("../images/background_grey_contrast.jpg");
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: cover;
