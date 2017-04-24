@@ -38,10 +38,19 @@
     <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
 		<script src="js/vendor/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-
-		</script>
+		<!-- <script type="text/javascript" src-"js/jquery.foggy.min.js"></script> -->
+		<script type="text/javascript" src="js/velocity.min.js"></script>
 	</head>
 	<body>
+		<canvas id="bg-img"></canvas>
+		<div id="bg-overlay"></div>
+		<div id="bg-tweets">
+			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x1">
+			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x2">
+			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x3">
+			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x4">
+			<img src="images/tweets/Donald-Trump-1.jpg" alt="" class="bg-tweet tweet-x5">
+		</div>
 		<div id="page-container">
 			<h1>TweetPoll</h1>
 			<canvas id="page-graph">
@@ -93,14 +102,14 @@
 				$(".search-element-group").each(function() {
 					var loadingTime = getRandomInt(1000, 5000);
 					var greenNum = getRandomInt(5, 95);
-					$(this).find(".search-element-loading-overlay").animate({
+					$(this).find(".search-element-loading-overlay").velocity({
 						width: "100%",
 					}, loadingTime).delay(loadingTime).fadeOut();
 					$(this).find(".search-element-loading").delay(loadingTime).fadeOut();
-					$(this).find(".search-element-red").delay(loadingTime).animate({
+					$(this).find(".search-element-red").delay(loadingTime).velocity({
 						width: $(this).find(".search-percent-red").text(),
 					}, 1000);
-					$(this).find(".search-element-green").delay(loadingTime).animate({
+					$(this).find(".search-element-green").delay(loadingTime).velocity({
 						width: $(this).find(".search-percent-green").text(),
 					}, 1000);
 					$(this).find(".search-percent-red").delay(loadingTime).fadeIn();
@@ -163,5 +172,8 @@
 			myChart.update();
 		}
 		</script>
+		<div class="" style="min-height: 100px;">
+
+		</div>
 	</body>
 </html>
