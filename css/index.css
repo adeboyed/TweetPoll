@@ -28,24 +28,20 @@ html, body {
 body {
 	/*background-color: rgb(52, 73, 94);*/
 	background-color:	#eff2f6;
-	color: white;
-	display: flex;
-	justify-content: center;
-	position: relative;
-
-}
-
-#bg-img {
 	background-image: url("../images/background_1280.jpg");
 	background-position: bottom;
 	background-repeat: no-repeat;
 	background-size: cover;
-	width: 100vw;
-	height: 100vh;
+	background-attachment: fixed;
+	color: white;
+	display: flex;
+	justify-content: center;
+	position: relative;
+	height: 100%;
 }
 
 #bg-overlay {
-	background-color: rgba(26, 26, 26, 0.5);
+	background-color: rgba(26, 26, 26, 0.8);
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -59,6 +55,10 @@ body {
 	font-size: 80pt;
 }
 
+#main-search-div {
+	position: relative;
+}
+
 #main-search-box {
 	position: absolute;
 	background-color: white;
@@ -69,10 +69,29 @@ body {
 	border-radius: 50px;
 	font-size: 30pt;
 	padding-left: 30px;
+	font-weight: 400;
 	font-family: 'Fira Sans', 'Helvetica', 'Arial', sans-serif;
 	color: lightgrey;
 }
 
+#main-search-text {
+	position: absolute;
+	font-family: 'Fira Sans', 'Helvetica', 'Arial', sans-serif;
+	color: lightgrey;
+	font-size: 30pt;
+	font-weight: 400;
+	height: 70px;
+	width: 630px;
+	top: 387px;
+	padding-left: 29px;
+}
+
+#searches-container {
+	margin-top: 550px;
+	width: 700px;
+	position: relative;
+}
+/*
 #tagline {
 	margin-top: 0;
 }
@@ -80,8 +99,6 @@ body {
 #page-container {
 	width: 800px;
 	min-height: 100%;
-	max-height: 100%;
-	height: 100%;
 	padding-left: 50px;
 	padding-right: 50px;
 	background-color: rgba(1, 1, 1, 0.7);
@@ -98,7 +115,7 @@ body {
 	min-height: 400px;
 	max-height: 400px;
 	height: 400px;
-}
+}*/
 
 h1 {
 	font-family: 'Sans-Serif';
@@ -127,7 +144,7 @@ h4 {
 .search-element-group {
 	position: relative;
 	height: 170px;
-	width: 800px;
+	width: 700px;
 }
 
 .search-element-search {
