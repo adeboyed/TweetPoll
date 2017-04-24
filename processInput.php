@@ -1,6 +1,7 @@
 <?php
 	$ignore = true;
-	
+	session_start();
+	header('Content-Type: application/json');
 	require_once( 'config.php' );
 
 	//GETTING THE DATA AND 
@@ -64,7 +65,13 @@
 			$stmt->close();
 		}else {
 			$stmt->close();
-			$result = generateNewResult ( $value );
+			$json = generateNewResult ( $value );
+			array_push ( $resultItems, $json );
+			
+			$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_result ( search_query, search_time, search_items ) VALUES ( ? , ? , NOW() ) ");
+			$stmtAdd->bind_param('ss', $value, json_encode( $json ) );
+			$stmtAdd->execute();
+			$stmtAdd->close();
 		}
 	}
 
@@ -78,5 +85,15 @@
 	}
 
 	function generateNewResult( $query ) {
+		$tweets = getTweets( $query );
+		
+		
+	}
+
+	function getTweets( $query ){
+		
+	}
+
+	function naiveBayes( $text ){
 		
 	}
