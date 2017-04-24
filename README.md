@@ -7,13 +7,13 @@
 - Henry Mattinson : Naive Bayes
 - Carlos Purves : Implementing a TweetPoll twitter page
 - Ben Curnow : UX Designer
-- Matthew Allsop : UX Designer
+- Matthew Allsop : Marketing
 
 ## General Details
 - Hosted on DigitalOcean (I hate azure VPS)
 - Uses a Naive Bayes Classifier
 - Add up to 5 topics to search
-- Topic length between 5 and 20 characters
+- Topic length between 5 and 25 characters
 - Analysing the last 200 tweets of each topic
 - Potentially adding ads
 
@@ -22,5 +22,11 @@
 
 ## Main pages
 /index.php : Main page of the website
+
 /processInput.php : Where all the magic happens :)
+
 /config.php : Database details
+
+## Special functions
+
+http://tweetpoll.co/topic1/topic2/ will search for topic1 and topic2, up to 5 topics, allowing for easier sharing of the url.
