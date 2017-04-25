@@ -2,48 +2,101 @@
 	$ignore = true;
 	session_start();
 	header('Content-Type: application/json');
-	require_once( 'functions.php' );
+	require_once 'Requests.php';
+	require_once 'exportClass.php' ;
+	require_once 'config.php';
+
+	define( 'SERVER_2_ADDRESS', 'http://localhost/server2/index.php' );
+
+	//CHECKING THE TOKEN
+	
+	if ( !isset( $_SESSION['token'] ) || !isset( $_POST['submit_token'] )  ){
+		errorMessage(0);
+	}else {
+		$tokenFromSession = $_SESSION['token'];
+		$tokenFromPost = filter_input(INPUT_POST, 'submit_token');
+		
+		
+		
+		if ( strcmp ( $tokenFromSession, $tokenFromPost ) !== 0 ){
+			//errorMessage(0);
+		}
+	}
+
+	Requests::register_autoloader();
+
+	$headers = array(
+		'TweetPoll-Header' => '59822d551b8b49abaabce3855e8e5964',
+	);
+
 
 	//GETTING THE DATA AND 
 
-	$searchItemsVal = filter_input(INPUT_POST, 'search_items');
-	$searchItemsVal = strip_tags( trim( $searchItemsVal ) );
+	$searchItem = filter_input(INPUT_POST, 'search_item');
 
-	if ( $searchItemsVal == null ){
-		errorMessage( 1 );
-	}else if ( !searchItemsVal ){
-		errorMessage( 1 );
-	}else if ( !isNumeric( $searchItemsVal ) ){
-		errorMessage( 1 );
-	}
-	
-	$searchItemsNo = intval( $searchItemsVal );
-
-	if ( $searchItemsNo > 5 || $searchItemsNo < 1 ){
-		errorMessage( 2 );
+	if ( $searchItem == null ){
+		errorMessage( 3 );
+	}else if ( !$searchItem ){
+		errorMessage( 3 );
+	}else if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ){
+		errorMessage( 3 );
+	}else if ( !ctype_alnum ( $searchItem ) ){
+		errorMessage( 3 );
 	}
 
-	$searchItems = array();
+	$searchItem = strip_tags( trim( $searchItem ) );
+	$searchItem = strtolower( $searchItem );
 
-	for ( $i = 1; $i <= $searchItemsNo; $i++ ){
-		$searchItem = filter_input(INPUT_POST, 'search_item' . $i );
-		if ( $searchItem == null ){
-			errorMessage( 3 );
-		}else if ( !$searchItem ){
-			errorMessage( 3 );
-		}else if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ){
-			errorMessage( 3 );
-		}else if ( !ctype_alnum ( $searchItem ) ){
-			errorMessage( 3 );
-		}
+	$returnItem = new exportClass;
+
+	$mysqli_conn = new mysqli( $db_host, $db_username, $db_password,$db_name );
+	if ( $mysqli_conn->connect_error ) {
+		errorMessage(101);
+	}
+
+	$stmtLog = $mysqli_conn->prepare("INSERT INTO search_log ( search_query, search_time ) VALUES ( ?, NOW() ) ");
+	$stmtLog->bind_param('s', $value );
+	$stmtLog->execute();
+	$stmtLog->close();
+
+	$stmt = $mysqli_conn->prepare("SELECT search_result, search_time FROM search_items WHERE search_query = ? AND search_time >= now() - interval 60 minute LIMIT 1");
+	$stmt->bind_param('s', $value );
+	$stmt->execute();
+	$stmt->store_result();
+	$stmt->bind_result( $result, $time );
+	$stmt->fetch(); 
+
+	if ( $stmt->num_rows == 1 ){
+		$returnItem = json_decode ( $result );
+		$returnItem->timeAgo = time_elapsed_string( $time );
 		
-		$searchItem = strip_tags( trim( $searchItem ) );
-		array_push( $searchItems, $searchItem );
-	}
+		$stmt->close();
+	}else {
+		$stmt->close();  
+		
+		$options = array(
+			'item' => $searchItem
+		);
 
-	generateResults( $searchItems );
+		$response = Requests::post( SERVER_2_ADDRESS , $headers, $options );
+		$body = $response->body;
+		$returnItem = json_encode( $body );
+
+		$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_items ( search_query, search_result, search_time ) VALUES ( ? , ? , NOW() )");
+		$stmtAdd->bind_param('ss', $value, $body );
+		$stmtAdd->execute();
+		$stmtAdd->close();
+	} 
+	
+	$mysqli_conn->close(); 
+
+
+	echo json_decode( $returnItem );
 
 	function errorMessage( $messageNo ){
-		//header("Location: https://tweetpoll.co/");
-		//exit();
+		$class = new exportClass;
+		$class->status = false;
+		$class->errorNo = $messageNo;
+		echo json_encode( $class );
+		exit();
 	}

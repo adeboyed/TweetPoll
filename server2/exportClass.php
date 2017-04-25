@@ -1,6 +1,6 @@
 <?php 
 	class exportClass {
-		var $status = false;
+		var $status = true;
 		var $errorNo = -1;
 		var $query;
 		var $positive;
