@@ -231,6 +231,7 @@ SOFTWARE. -->
 					});
 			};
 			function animateFinish($element, greenPercent, updateTime) {
+				fillSearch($element, updateTime, greenPercent);
 				$($element).find(".search-element-loading-overlay").velocity({
 						width: "100%",
 					}, {
