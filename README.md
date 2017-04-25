@@ -10,7 +10,7 @@
 - Matthew Allsop : Marketing
 
 ## General Details
-- Hosted on DigitalOcean (I hate azure VPS)
+- Hosted on 2 seperate servers
 - Uses a Naive Bayes Classifier
 - Add up to 5 topics to search
 - Topic length between 5 and 25 characters
@@ -26,6 +26,40 @@
 /processInput.php : Where all the magic happens :)
 
 /config.php : Database details
+
+## Servers
+
+### Server 1 - Codename: Jean
+- Hosted on DigitalOcean
+- tweetpoll.co
+- Public facing server
+- Basically front-end and caching is done here
+
+- David
+- Ben
+
+#### Specs
+- 512MB Memory
+- 1 Core Processor
+- 20GB SSD
+- 1TB Transfer
+
+### Server 2 - Codename: White
+- Hosted on Azure
+- api.tweetpoll.co
+- Private facing server, only allows connections from jean
+- Backend
+
+- Henry
+- Harri
+- Carlos
+
+### Specs
+- 4GB Memory
+- 2 Core Processor
+- 32GB SSD
+- 100GB Transfer
+
 
 ## Special functions
 
