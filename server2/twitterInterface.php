@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL); ini_set('display_errors', 1);
 /*
  * TweetPoll Twitter Interface
  */
@@ -16,8 +16,8 @@ class TwitterInterface {
     private $settings;
     private $exchange;
     private $target = '_TweetPoll';
-    private $data;
-    private $debug = true;
+    public $data;
+    private $debug = false;
 
     public function __construct() {
         $this->settings = array(
