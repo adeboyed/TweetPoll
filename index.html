@@ -208,13 +208,14 @@ SOFTWARE. -->
 					$(this).parent().remove();
 				});
 				$searchBlock.removeClass("display-none");
+				animateLoad($searchBlock);
 				return $searchBlock;
 			};
 			function fillSearch($element, updateTime, greenPercent) {
 				$($element).find(".search-percent-green").html(greenPercent.toString().concat("%"));
 				$($element).find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
 			};
-			function animateLoad($element, updateTime) {
+			function animateLoad($element) {
 				var setupTime = 400;
 				var loadingTime = getRandomInt(2000, 6000);
 				var greenNum = getRandomInt(5, 95);
