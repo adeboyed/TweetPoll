@@ -37,6 +37,7 @@ body {
 	display: flex;
 	justify-content: center;
 	position: relative;
+	min-height: 100vh;
 	height: 100%;
 }
 
@@ -46,6 +47,21 @@ body {
 	width: 100%;
 	height: 100%;
 
+}
+
+#main-toast {
+	width: 100vw;
+	width: 100%;
+	background-color: #e9433c;
+	z-index: 2;
+	position: absolute;
+	padding: 8px;
+  font-family: 'Fira Sans', 'Helvetica', 'Arial', sans-serif;
+  padding-left: 20px;
+   opacity: 0; 
+  font-size: 12pt;
+  text-align: center;
+  font-weight: 700;
 }
 
 #main-title {
@@ -147,8 +163,46 @@ h4 {
 	width: 700px;
 }
 
+.search-element-cross {
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	background-color: rgba(0, 0, 0, 0);
+	right: -80px;
+	top: 60px;
+	border-radius: 4px;
+}
+
+.search-element-cross:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-element-cross:focus {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-element-cross-1,
+.search-element-cross-2 {
+	width: 3px;
+	height: 40px;
+	background-color: white;
+	position: relative;
+	left: 24px;
+}
+
+.search-element-cross-1 {
+	transform: rotate(45deg);
+	top: 5px;
+}
+
+.search-element-cross-2 {
+	transform: rotate(-45deg);
+	top: -35px;
+}
+
 .search-element-search {
 	position: absolute;
+	opacity: 0;
 }
 
 .search-element-updated {
@@ -163,7 +217,7 @@ h4 {
 
 .search-element-loading {
 	position: absolute;
-	width: 100%;
+	width: 0%;
 	height: 7px;
 	background-color: lightgrey;
 	top: 100px;
@@ -174,7 +228,7 @@ h4 {
 	position: absolute;
 	top: 0;
 	height: 7px;
-	background-color: lightgreen;
+	background-color: orange;
 	width: 0%;
 	z-index: 3;
 }
