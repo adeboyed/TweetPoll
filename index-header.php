@@ -1,9 +1,4 @@
-<?php
-
-	$ignore = true;
-	session_start();
-	require_once( 'includes/functions.php' );
-	
+<?php	
 	$searchItems = array();
 
 	if ( isset( $_GET['p1'] ) ){
@@ -76,6 +71,9 @@
 		}
 	}
 
-	if ( sizeof( $searchItems ) > 0 ){
-		generateResults( $searchItems );
+
+	if ( sizeof ( $searchItems ) > 0 ){
+		//Do something
 	}
+
+?>

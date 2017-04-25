@@ -7,7 +7,6 @@
 - Henry Mattinson : Naive Bayes
 - Carlos Purves : Implementing a TweetPoll twitter page
 - Ben Curnow : UX Designer
-- Matthew Allsop : Marketing
 
 ## General Details
 - Hosted on 2 seperate servers
@@ -56,9 +55,10 @@
 
 ### Specs
 - 4GB Memory
-- 2 Core Processor
-- 32GB SSD
+- 1 Core Processor
+- 7GB SSD
 - 100GB Transfer
+- Can be load balanced (obvs we'll need more than 1 server)
 
 
 ## Special functions

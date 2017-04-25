@@ -17,6 +17,11 @@
 		$returnItems = array();
 
 		foreach ($searchItems as &$value) {
+			$stmtLog = $mysqli_conn->prepare("INSERT INTO search_log ( search_query, search_time ) VALUES ( ?, NOW() ) ");
+			$stmtLog->bind_param('s', $value );
+			$stmtLog->execute();
+			$stmtLog->close();
+			
 			$stmt = $mysqli_conn->prepare("SELECT search_result, search_time FROM search_items WHERE search_query = ? AND search_time > DATEADD(HOUR, -1, GETDATE()) LIMIT 1");
 			$stmt->bind_param('s', $value );
 			$stmt->execute();
@@ -34,7 +39,7 @@
 				$json = generateNewResult ( $value );
 				array_push ( $returnItems, $json );
 
-				$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_result ( search_query, search_time, search_items ) VALUES ( ? , ? , NOW() ) ");
+				$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_items ( search_query, search_time, search_items ) VALUES ( ? , ? , NOW() ) ");
 				$stmtAdd->bind_param('ss', $value, json_encode( $json ) );
 				$stmtAdd->execute();
 				$stmtAdd->close();
