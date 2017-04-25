@@ -17,7 +17,7 @@
 - Potentially adding ads
 
 ## TweetPoll Twitter Account
-- Username and Password coming soon (Carlos)
+- Username: @_TweetPoll
 
 ## Main pages
 /index.php : Main page of the website
