@@ -17,7 +17,7 @@ class TwitterInterface {
     private $exchange;
     private $target = '_TweetPoll';
     private $data;
-    private $debug = false;
+    private $debug = true;
 
     public function __construct() {
         $this->settings = array(
@@ -39,7 +39,7 @@ class TwitterInterface {
         if($cursor !== '') $cursor_param = '&max_id='.$cursor;
         else $this->data = [];
 
-        $getfield = '?q=' . urlencode($query) . "&lang=en&count=100" . $count_param . $cursor_param;
+        $getfield = '?q=' . urlencode($query) . "&lang=en&count=100" . $cursor_param;
         $twitter = new TwitterAPIExchange($this->settings);
         $results = $twitter->setGetfield($getfield)->buildOauth($url, 'GET')->performRequest();
         $results = json_decode($results, true);
