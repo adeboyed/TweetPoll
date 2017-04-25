@@ -40,6 +40,7 @@ class TwitterInterface {
         else $this->data = [];
 
         $getfield = '?q=' . urlencode($query) . "&lang=en&count=100" . $cursor_param;
+
         $twitter = new TwitterAPIExchange($this->settings);
         $results = $twitter->setGetfield($getfield)->buildOauth($url, 'GET')->performRequest();
         $results = json_decode($results, true);

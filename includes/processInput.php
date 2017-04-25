@@ -17,7 +17,7 @@
 		$tokenFromPost = filter_input(INPUT_POST, 'submit_token');
 		
 		if ( strcmp ( $tokenFromSession, $tokenFromPost ) !== 0 ){
-			errorMessage( $tokenFromSession . ' ' . $tokenFromPost );
+			//errorMessage( $tokenFromSession . ' ' . $tokenFromPost );
 		}
 	}
 

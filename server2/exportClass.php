@@ -7,4 +7,11 @@
 		var $negative;
 		var $timeAgo;
 	}
+
+	class azureDocuments {
+		var $language;
+		var $id;
+		var $text;
+	}
+
 ?>

@@ -136,17 +136,15 @@
     <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
 		<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
 		<script src="js/vendor/jquery.min.js"></script>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-		<!-- <script type="text/javascript" src-"js/jquery.foggy.min.js"></script> -->
 		<script type="text/javascript" src="js/velocity.min.js"></script>
 	</head>
 	<body>
 		<div id="bg-img"></div>
 		<div id="bg-overlay"></div>
+		<div id="main-toast">Sorry we don't harvest strings fewer than 4 characters!</div>
 		<h1 id="main-title">TweetPoll</h1>
 		<input type="text" name="" id="main-search-box"
 			maxlength="28" placeholder="Query the opinion harvester...">
-
 		<div id="searches-container">
 			<div class="search-element-group-template display-none">
 				<h2 class="search-element-search">Jeremy Corbyn</h2>
@@ -160,9 +158,14 @@
 						<div class="search-element-red"></div>
 					</div>
 				</div>
+				<div class="search-element-cross">
+					<div class="search-element-cross-1"></div>
+					<div class="search-element-cross-2"></div>
+				</div>
 				<h3 class="search-percent-green">23%</h3>
 				<h3 class="search-percent-red">77%</h3>
 			</div>
+
 		</div>
 
 		<!-- <div id="page-container">
@@ -191,73 +194,156 @@
 
 			</canvas>
 		</div> -->
-
+		<script type="text/javascript">
+			var loadingMessages = [
+									"Locating renderable gigapixels",
+									"Spinning up the hamster",
+									"Shovelling coal to the server",
+									"Programming the flux capacitor",
+									"We dream about faster computers",
+									"Would you like fries with that?",
+									"Calculating gravitational constant",
+									"Forming the black hole",
+									"At least you’re not on hold",
+									"This server is powered by oranges",
+									"We’re testing your patience",
+									"Waiting for the satellite",
+									"Launching into near Earth orbit",
+									"This is faster than you could do it",
+									"Warming up Large Hadron Collider",
+									"Waiting for the abacus",
+									"The elves are having lunch",
+									"Time is an illusion",
+									"Hang on, it’s here somewhere",
+									"Measuring cable length",
+									"Re-calibrating the internet",
+									"Reconfiguring coffee machine",
+									"Paging the administrator",
+									"Counting backwards from infinity",
+									"Notifying field agents",
+									"Negotiating WiFi password",
+									"Scanning for credit cards",
+									"Adjusting for your IQ",
+									"Dividing by zero",
+									"Adding random fluctuations",
+									"Recalculating Pi",
+									"Creating universe",
+									"Caching internet locally",
+									"Time-loop inversion failed",
+									"Commencing infinite loop",
+									"Spinning wheel of fortune",
+									"Starting missile launch",
+									"Protecting the innocent",
+									"Rewinding DVDs",
+									"The internet is full.. please wait",
+									"Loading loading message",
+									"Computing chance of success",
+									"Randomising memory access",
+									"I think, therefore I am",
+									"Preparing for hyperspace jump",
+									"Adjusting bell curves",
+									"Adding hidden agendas",
+									"Aligning covariance matrices",
+									"Building data structures",
+									"Calibrating blue skies",
+									"Collecting meteor particles",
+									"Decomposing singular values",
+									"Destabilising economic indicators",
+									"Downloading terrain data",
+									"Generating jobs",
+									"Flushing pipe network",
+									"Integrating curves",
+									"Normalising power",
+									"Mixing genetic pool",
+									"Perturbing matrices",
+									"Synthesising wavelets",
+									"Time-compressing simulator clock"
+								];
+		</script>
 		<script>
 			var searches = [
 				['Jeremy Corbyn', '3 hours ago', 23],
-				['Theresa May', '1 hour ago', 12],
+				['Theresa May', '1 hour ago', 88],
 				['Donald Trump', '10 minutes ago', 32],
 				['Harry Maughan', '5 hours ago', 44],
 				['David Adeboye', '45 minutes ago', 23],
 				['Devavrata Soni', '13 minutes ago', 4],
 			];
-			
 			function getRandomInt(min, max) {
 			  min = Math.ceil(min);
 			  max = Math.floor(max);
 			  return Math.floor(Math.random() * (max - min)) + min;
 			};
-			function createSearch(name, updateTime, greenPercent) {
+			function createSearch(name) {
+				var loadingMessage = loadingMessages[Math.floor(Math.random()*loadingMessages.length)];
 				var $searchBlock = $(".search-element-group-template").clone();
 				$searchBlock.removeClass("search-element-group-template");
 				$searchBlock.addClass("search-element-group");
 				$searchBlock.prependTo("#searches-container");
-				$searchBlock.find(".search-percent-green").html(greenPercent.toString().concat("%"));
-				$searchBlock.find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
 				$searchBlock.find(".search-element-search").html(name);
-				$searchBlock.find(".search-element-updated").html("Last Updated: ".concat(updateTime));
+				$searchBlock.find(".search-element-updated").html(loadingMessage.concat("..."));
+				$(".search-element-cross").click(function() {
+					$(this).parent().remove();
+				});
 				$searchBlock.removeClass("display-none");
+				animateLoad($searchBlock);
 				return $searchBlock;
 			};
-			function animateSearch($element) {
-				var loadingTime = getRandomInt(1000, 5000);
+			function fillSearch($element, updateTime, greenPercent) {
+				$($element).find(".search-percent-green").html(greenPercent.toString().concat("%"));
+				$($element).find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
+			};
+			function animateLoad($element) {
+				var setupTime = 400;
+				var loadingTime = getRandomInt(2000, 6000);
 				var greenNum = getRandomInt(5, 95);
-				$($element).find(".search-element-loading-overlay").velocity({
+				$($element).find(".search-element-search").velocity({
+					opacity: "1",
+				}, setupTime);
+				$($element).find(".search-element-loading").velocity({
 					width: "100%",
-				}, loadingTime).delay(loadingTime).fadeOut();
-				$($element).find(".search-element-loading").delay(loadingTime).fadeOut();
-				$($element).find(".search-element-red").delay(loadingTime).velocity({
+				}, setupTime);
+				$($element).find(".search-element-loading-overlay").delay(setupTime).velocity({
+						width: "80%",
+					}, {
+						duration: loadingTime,
+					});
+			};
+			function animateFinish($element, greenPercent, updateTime) {
+				fillSearch($element, updateTime, greenPercent);
+				$($element).find(".search-element-loading-overlay").velocity({
+						width: "100%",
+					}, {
+						duration: 400,
+					}).delay(400).fadeOut();
+				$($element).find(".search-element-loading").delay(400).fadeOut();
+				window.setTimeout(function() {
+					$($element).find(".search-element-updated").html(updateTime);
+				}, 400);
+				$($element).find(".search-element-red").delay(400).velocity({
 					width: $($element).find(".search-percent-red").text(),
 				}, 1000);
-				$($element).find(".search-element-green").delay(loadingTime).velocity({
+				$($element).find(".search-element-green").delay(400).velocity({
 					width: $($element).find(".search-percent-green").text(),
 				}, 1000);
-				$($element).find(".search-percent-red").delay(loadingTime).fadeIn();
-				$($element).find(".search-percent-green").delay(loadingTime).fadeIn();
+				$($element).find(".search-percent-red").delay(400).fadeIn();
+				$($element).find(".search-percent-green").delay(400).fadeIn();
 			};
 			$(document).ready(function() {
 				for (search of searches) {
-					createSearch(search[0], search[1], search[2]);
+					$searchBlock = createSearch(search[0], search[1], search[2]);
+					animateLoad($searchBlock, "Last Updated: ".concat("updateTime"));
+					// fillSearch($searchBlock, )
 				};
-				$(".search-element-group").each(function() {
-					animateSearch(this);
-				});
+				// $(".search-element-group").each(function() {
+				// 	animateSearch(this);
+				// });
 			});
-		</script>
-		<script type="text/javascript">
-		$('#main-search-box').keypress(function (e) {
-				if (e.which == 13) {
-					var boxValue = $("#main-search-box").val();
-					$("#main-search-box").val("");
-					submitText( boxValue );
-					return false;
-				};
-		});
-			
 			function submitText ( value ){
+				console.log('hello');
 				var submitToken = '<?php echo $token ?>';
 				var dataString = '&search_item=' + value + '&submit_token=' + submitToken;
-				
+				var $searchBlock = createSearch(value);
 				$.ajax({
 					type: "POST",
 					url: "includes/processInput.php",
@@ -268,10 +354,9 @@
 							var query = entity.query;
 							var positive = entity.positive;
 							var timeAgo = entity.timeAgo;
+							animateFinish($searchBlock, positive, timeAgo);
 
-							var searchBlock = createSearch(query , timeAgo , positive );
-							animateSearch(searchBlock);
-						}else {
+						} else {
 							//Ben decide
 						}
 					},
@@ -281,17 +366,31 @@
 					  //alert(err.Message);
 					}
 				});
-				
+
 			}
-			
+
 		</script>
-		<!-- Graph create script -->
+		<script type="text/javascript">
+		$('#main-search-box').keypress(function (e) {
+				if (e.which == 13) {
+					var boxValue = $("#main-search-box").val();
+					if (boxValue.length > 3) {
+						$("#main-search-box").val("");
+						submitText( boxValue );
+						return false;
+					} else {
+						$("#main-toast").finish().animate({
+							opacity: "1",
+						}, 500);
+						$("#main-toast").delay(5000).animate({
+							opacity: "0",
+						}, 500);
+					};
+				};
+		});
+		</script>
 		<div class="" style="min-height: 100px;">
 
 		</div>
 	</body>
 </html>
-<?php
-	echo $_SESSION['s_token']. ' ';
-	echo $token;
-				?>

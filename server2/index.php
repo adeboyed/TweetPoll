@@ -3,6 +3,11 @@
 	$ignore = true;
 	header('Content-Type: application/json');
 	require_once('exportClass.php');
+	require_once('Requests.php');
+	require_once('twitterInterface.php');
+
+	Requests::register_autoloader();
+
 	
 	if ( isset( getallheaders() ['TweetPoll-Header'] ) ){
 		$header = getallheaders() ['TweetPoll-Header'];
@@ -68,9 +73,12 @@
 	}
 
 	function generateNewResult( $query ) {
-		$tweets = getTweets( $query, 100 );
+		//var_dump ( $query );
+		//$tweets = getTweets( $query, 25 );
 		
-		$positive = 0;
+		//var_dump( $tweets );
+		
+		/* $positive = 0;
 		$negative = 0;
 		
 		$result = new exportClass;
@@ -84,25 +92,82 @@
 				$negative++;
 			}
 			
-		}
+		} 
 		
 		$result->query = ucwords ( $query );
 		$result->positive = $positive;
 		$result->negative = $negative;
+		$result->timeAgo = "Just Now"; */
+		
+		//$result = azureML ( $tweets );
+		sleep(3);
+		$result = new exportClass;
+		$result->status = true;
+		$result->query = ucwords ( $query );
 		$result->timeAgo = "Just Now";
+		$result->positive = 56;
+		$result->negative = 44;
+		
+		//$result->positive = $result->positive * 4;
+		//$result->negative = $result->negative * 4;
 		
 		return $result;
 	}
 
 	function getTweets( $query, $num ){
-		$array = array();
-		
-		for ( $i = 0; $i < 100; $i++ ){
-			$text = 'I am a tweet';
-			array_push( $array, $text );
+		$interface = new TwitterInterface();
+		return $interface->getTweets( $query, $num );
+	}
+
+	function azureML( $tweets ){
+		$toSend = array();
+		$i = 1;
+		foreach ( $tweets as &$value ){
+			$tweet = new azureDocuments;
+			$tweet->language = 'en';
+			$tweet->id = $i;
+			$tweet->text = $value;
+			
+			array_push( $toSend, $tweet );
+				
+			$i++;
 		}
 		
-		return $array;
+		$headers = array(
+			'Ocp-Apim-Subscription-Key' => '0adc559e358f438aa531b30b6ac806ee',
+			'Content-Type' => 'application/json',
+			'Accept' => 'application/json'
+		);
+		
+		$options = array(
+			'documents' => $toSend,
+		);
+		
+		$response = Requests::post( 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment' , $headers, json_encode( $options ) );
+		$body = $response->body;
+		
+		$returnItem = json_decode( $body );
+		
+		$documents = $returnItem->documents;
+		
+		$positive = 0;
+		$negative = 0;
+		
+		foreach ( $documents as &$value ){
+			$score = $value->score;
+			
+			if ( $score >= 0.5 ){
+				$positive++;
+			}else {
+				$negative++;
+			}
+		}
+		
+		$result = new exportClass;
+		$result->positive = $positive;
+		$result->negative = $negative;
+		
+		return $result;
 	}
 
 	function naiveBayes( $text ){
