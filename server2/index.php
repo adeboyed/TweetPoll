@@ -17,7 +17,7 @@
 				errorMessage( 13 );
 			}else if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ){
 				errorMessage( 13 );
-			}else if ( !ctype_alnum ( $searchItem ) ){
+			}else if ( !coolCheck( $searchItem) ){
 				errorMessage( 13 );
 			}
 			
@@ -28,10 +28,14 @@
 			echo json_encode( $returnItem );
 			
 		}else {
-			//Nothing
+			errorMessage(15);
 		}
 	}else {
-		//Nothing
+		errorMessage(16);
+	}
+
+	function coolCheck($string) {
+		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
 	}
 
 	function time_elapsed_string($datetime, $full = false) {
@@ -82,7 +86,7 @@
 			
 		}
 		
-		$result->query = $query;
+		$result->query = ucwords ( $query );
 		$result->positive = $positive;
 		$result->negative = $negative;
 		$result->timeAgo = "Just Now";

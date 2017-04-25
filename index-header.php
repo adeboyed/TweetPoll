@@ -3,7 +3,7 @@
 	$searchItems = array();
 
 	$token = generateRandomString( 20 );
-	$_SESSION['token'] = $token;
+	$_SESSION['s_token'] = $token;
 
 	if ( isset( $_GET['p1'] ) ){
 		
@@ -291,3 +291,7 @@
 		</div>
 	</body>
 </html>
+<?php
+	echo $_SESSION['s_token']. ' ';
+	echo $token;
+				?>

@@ -10,16 +10,14 @@
 
 	//CHECKING THE TOKEN
 	
-	if ( !isset( $_SESSION['token'] ) || !isset( $_POST['submit_token'] )  ){
+	if ( !isset( $_SESSION['s_token'] ) || !isset( $_POST['submit_token'] )  ){
 		errorMessage(0);
 	}else {
-		$tokenFromSession = $_SESSION['token'];
+		$tokenFromSession = $_SESSION['s_token'];
 		$tokenFromPost = filter_input(INPUT_POST, 'submit_token');
 		
-		
-		
 		if ( strcmp ( $tokenFromSession, $tokenFromPost ) !== 0 ){
-			//errorMessage(0);
+			errorMessage( $tokenFromSession . ' ' . $tokenFromPost );
 		}
 	}
 
@@ -33,6 +31,7 @@
 	//GETTING THE DATA AND 
 
 	$searchItem = filter_input(INPUT_POST, 'search_item');
+	$searchItem = trim( $searchItem );
 
 	if ( $searchItem == null ){
 		errorMessage( 3 );
@@ -40,11 +39,11 @@
 		errorMessage( 3 );
 	}else if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ){
 		errorMessage( 3 );
-	}else if ( !ctype_alnum ( $searchItem ) ){
+	}else if ( !coolCheck ( $searchItem ) ){
 		errorMessage( 3 );
 	}
 
-	$searchItem = strip_tags( trim( $searchItem ) );
+	$searchItem = strip_tags( $searchItem );
 	$searchItem = strtolower( $searchItem );
 
 	$returnItem = new exportClass;
@@ -92,6 +91,10 @@
 
 
 	echo json_decode( $returnItem );
+
+	function coolCheck($string) {
+		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
+	}
 
 	function errorMessage( $messageNo ){
 		$class = new exportClass;
