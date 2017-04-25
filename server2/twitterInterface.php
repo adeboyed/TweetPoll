@@ -31,7 +31,7 @@ class TwitterInterface {
     }
 
 
-    public function getFollowers($query, $number, $cursor = '') {
+    public function getTweets($query, $number, $cursor = '') {
         $url = 'https://api.twitter.com/1.1/search/tweets.json';
         $cursor_param = '';
         $next = $number;
@@ -57,7 +57,7 @@ class TwitterInterface {
             }
 
             if($cursor > 0 && $next > 0) {
-                $this->getFollowers($query, $next, $cursor);
+                $this->getTweets($query, $next, $cursor);
             } else {
                 return $this->data;
             }
@@ -77,5 +77,5 @@ class TwitterInterface {
  // require_once('twitterInterface.php');
  // function test() {
  //     $interface = new TwitterInterface();
- //     $interface->getFollowers("Theresa May", 250);
+ //     $interface->getTweets("Theresa May", 250);
  // }
