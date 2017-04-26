@@ -81,11 +81,18 @@
 		$response = Requests::post( SERVER_2_ADDRESS , $headers, $options );
 		$body = $response->body;
 		$returnItem = json_decode( $body );
+		
+		if ( $returnItem != null ){
+			$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_items ( search_query, search_result, search_time ) VALUES ( ? , ? , NOW() )");
+			$stmtAdd->bind_param('ss', $searchItem, $body );
+			$stmtAdd->execute();
+			$stmtAdd->close();
+		}else {
+			$mysqli_conn->close(); 
+			errorMessage(9);
+		}
 
-		$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_items ( search_query, search_result, search_time ) VALUES ( ? , ? , NOW() )");
-		$stmtAdd->bind_param('ss', $searchItem, $body );
-		$stmtAdd->execute();
-		$stmtAdd->close();
+		
 	} 
 	
 	$mysqli_conn->close(); 
