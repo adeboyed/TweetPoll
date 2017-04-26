@@ -41,35 +41,6 @@
 		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
 	}
 
-	function time_elapsed_string($datetime, $full = false) {
-		$now = new DateTime;
-		$ago = new DateTime($datetime);
-		$diff = $now->diff($ago);
-
-		$diff->w = floor($diff->d / 7);
-		$diff->d -= $diff->w * 7;
-
-		$string = array(
-			'y' => 'year',
-			'm' => 'month',
-			'w' => 'week',
-			'd' => 'day',
-			'h' => 'hour',
-			'i' => 'minute',
-			's' => 'second',
-		);
-		foreach ($string as $k => &$v) {
-			if ($diff->$k) {
-				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-			} else {
-				unset($string[$k]);
-			}
-		}
-
-		if (!$full) $string = array_slice($string, 0, 1);
-		return $string ? implode(', ', $string) . ' ago' : 'just now';
-	}
-
 	function generateNewResult( $query ) {
 		$tweets = getTweets( $query, 50 );
 		
@@ -154,22 +125,28 @@
 		
 		foreach ( $tweets as &$value ){
 			$class = $sentiment->categorise( $value );
-			if ( strcmp( $class, 'neg' ) == 0 ) $result->negative++;
-			if ( strcmp( $class, 'pos' ) == 0 ) $result->positive++;
+			$scores = $sentiment->score($value);
+			if ( $scores['neg'] > 0.40 ){
+				$result->negative++;
+			} 
+			if ( $scores['pos'] > 0.40  ){
+				$result->positive++;
+			}
 		}
 		return $result;
 	}
 
 	function normalise ( $result ){
 		$total = $result->positive + $result->negative;
+		$result->realTotal = $total;
 		
 		if ( $total == 100 ) return $result;
 		
 		$posPercent = $result->positive / $total;
 		$negPercent = $result->negative / $total;
 		
-		$result->positive = (int) ( $posPercent * 100 );
-		$result->negative = (int) ( $negPercent * 100 );
+		$result->positive = (int) round( $posPercent * 100 );
+		$result->negative = (int) round( $negPercent * 100 );
 		
 		return $result;
 	}
