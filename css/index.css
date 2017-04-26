@@ -408,6 +408,12 @@ a:focus {
 		height: 50px;
 		font-size: 20pt;
 	}
+	.search-element-updated {
+		display: none;
+	}
+	#credits-container {
+		width: calc(100% - 20px);
+	}
 }
 
 @media screen and (max-width: 500px) {
@@ -426,5 +432,8 @@ a:focus {
 	}
 	#searches-container {
 		margin-top: 250px;
+	}
+	#credits-container {
+		margin-top: 200px;
 	}
 }
