@@ -156,6 +156,10 @@ body {
 	width: 500px;
 	position: relative;
 }
+
+.ui-loader {
+	display: none;
+}
 /*
 #tagline {
 	margin-top: 0;
