@@ -3,10 +3,8 @@
 	$ignore = true;
 	header('Content-Type: application/json');
 	require_once('exportClass.php');
-	require_once('Requests.php');
+	require_once 'insight/autoload.php';
 	require_once('twitterInterface.php');
-
-	Requests::register_autoloader();
 
 	
 	if ( isset( getallheaders() ['TweetPoll-Header'] ) ){
@@ -73,43 +71,18 @@
 	}
 
 	function generateNewResult( $query ) {
-		//var_dump ( $query );
-		//$tweets = getTweets( $query, 25 );
+		$tweets = getTweets( $query, 50 );
 		
-		//var_dump( $tweets );
-		
-		/* $positive = 0;
-		$negative = 0;
-		
-		$result = new exportClass;
-		
-		foreach ( $tweets as &$value ){
-			$score = naiveBayes ( $value );
-			
-			if ( $score >= 0.5 ){
-				$positive++;
-			}else {
-				$negative++;
-			}
-			
-		} 
-		
-		$result->query = ucwords ( $query );
-		$result->positive = $positive;
-		$result->negative = $negative;
-		$result->timeAgo = "Just Now"; */
-		
-		//$result = azureML ( $tweets );
-		sleep(3);
-		$result = new exportClass;
-		$result->status = true;
-		$result->query = ucwords ( $query );
-		$result->timeAgo = "Just Now";
-		$result->positive = 56;
-		$result->negative = 44;
-		
-		//$result->positive = $result->positive * 4;
-		//$result->negative = $result->negative * 4;
+		if ( is_array( $tweets ) && sizeof( $tweets ) > 0 ){
+			$result = naiveBayes( $tweets );
+			$result = normalise( $result );
+			//sleep(3);
+			$result->status = true;
+			$result->query = ucwords ( $query );
+			$result->timeAgo = "Just Now";
+		}else {
+			errorMessage(14);
+		}
 		
 		return $result;
 	}
@@ -167,12 +140,40 @@
 		$result->positive = $positive;
 		$result->negative = $negative;
 		
+		//var_dump ( $result );
+		
 		return $result;
 	}
 
-	function naiveBayes( $text ){
-		return mt_rand() / mt_getrandmax();
+	function naiveBayes( $tweets ){
+		
+		$sentiment = new \PHPInsight\Sentiment();
+		$result = new exportClass;
+		$result->positive = 0;
+		$result->negative = 0;
+		
+		foreach ( $tweets as &$value ){
+			$class = $sentiment->categorise( $value );
+			if ( strcmp( $class, 'neg' ) == 0 ) $result->negative++;
+			if ( strcmp( $class, 'pos' ) == 0 ) $result->positive++;
+		}
+		return $result;
 	}
+
+	function normalise ( $result ){
+		$total = $result->positive + $result->negative;
+		
+		if ( $total == 100 ) return $result;
+		
+		$posPercent = $result->positive / $total;
+		$negPercent = $result->negative / $total;
+		
+		$result->positive = (int) ( $posPercent * 100 );
+		$result->negative = (int) ( $negPercent * 100 );
+		
+		return $result;
+	}
+
 
 	function errorMessage( $messageNo ){
 		$class = new exportClass;
