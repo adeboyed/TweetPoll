@@ -1,23 +1,3 @@
-<!-- Copyright 2017 Ben Curnow
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. -->
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -64,9 +44,12 @@ SOFTWARE. -->
 		<div id="bg-img"></div>
 		<div id="bg-overlay"></div>
 		<div id="main-toast">Sorry we don't harvest strings fewer than 4 characters!</div>
+		<div id="main-credits-button">
+			<h3 id="main-button-text">Credits</h3>
+		</div>
 		<h1 id="main-title">TweetPoll</h1>
 		<input type="text" name="" id="main-search-box"
-			maxlength="28" placeholder="Query the opinion harvester...">
+			maxlength="24" placeholder="Query the opinion harvester...">
 		<div id="searches-container">
 			<div class="search-element-group-template display-none">
 				<h2 class="search-element-search">Jeremy Corbyn</h2>
@@ -86,6 +69,7 @@ SOFTWARE. -->
 				</div>
 				<h3 class="search-percent-green">23%</h3>
 				<h3 class="search-percent-red">77%</h3>
+				<h3 class="search-element-error">The query got stuck in the straw chopper.. please try again...</h3>
 			</div>
 
 		</div>
@@ -183,20 +167,15 @@ SOFTWARE. -->
 								];
 		</script>
 		<script>
-			var searches = [
-				['Jeremy Corbyn', '3 hours ago', 23],
-				['Theresa May', '1 hour ago', 88],
-				['Donald Trump', '10 minutes ago', 32],
-				['Harry Maughan', '5 hours ago', 44],
-				['David Adeboye', '45 minutes ago', 23],
-				['Devavrata Soni', '13 minutes ago', 4],
-			];
 			function getRandomInt(min, max) {
 			  min = Math.ceil(min);
 			  max = Math.floor(max);
 			  return Math.floor(Math.random() * (max - min)) + min;
 			};
 			function createSearch(name) {
+				$('html, body').animate({
+        	scrollTop: $("#main-title").offset().top
+		    }, 1000);
 				var loadingMessage = loadingMessages[Math.floor(Math.random()*loadingMessages.length)];
 				var $searchBlock = $(".search-element-group-template").clone();
 				$searchBlock.removeClass("search-element-group-template");
@@ -211,14 +190,9 @@ SOFTWARE. -->
 				animateLoad($searchBlock);
 				return $searchBlock;
 			};
-			function fillSearch($element, updateTime, greenPercent) {
-				$($element).find(".search-percent-green").html(greenPercent.toString().concat("%"));
-				$($element).find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
-			};
 			function animateLoad($element) {
 				var setupTime = 400;
-				var loadingTime = getRandomInt(2000, 6000);
-				var greenNum = getRandomInt(5, 95);
+				var loadingTime = getRandomInt(4000, 7000);
 				$($element).find(".search-element-search").velocity({
 					opacity: "1",
 				}, setupTime);
@@ -232,7 +206,8 @@ SOFTWARE. -->
 					});
 			};
 			function animateFinish($element, greenPercent, updateTime) {
-				fillSearch($element, updateTime, greenPercent);
+				$($element).find(".search-percent-green").html(greenPercent.toString().concat("%"));
+				$($element).find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
 				$($element).find(".search-element-loading-overlay").velocity({
 						width: "100%",
 					}, {
@@ -251,20 +226,36 @@ SOFTWARE. -->
 				$($element).find(".search-percent-red").delay(400).fadeIn();
 				$($element).find(".search-percent-green").delay(400).fadeIn();
 			};
-			$(document).ready(function() {
-				for (search of searches) {
-					$searchBlock = createSearch(search[0], search[1], search[2]);
-					animateLoad($searchBlock, "Last Updated: ".concat("updateTime"));
-					// fillSearch($searchBlock, )
-				};
-				// $(".search-element-group").each(function() {
-				// 	animateSearch(this);
-				// });
-			});
-			function submitText ( value ){
+			function searchError($element) {
+				$($element).find(".search-element-search").fadeOut();
+				$($element).find(".search-element-updated").fadeOut();
+				$($element).find(".search-element-error").delay(500).velocity({
+					opacity: "1",
+				}, 500);
+				window.setTimeout(function() {
+					$($element).fadeOut();
+				}, 3000);
+				window.setTimeout(function() {
+					$($element).remove();
+				}, 4000);
+			};
+
+			// $(document).ready(function() {
+			// 	for (search of searches) {
+			// 		$searchBlock = createSearch(search[0], search[1], search[2]);
+			// 		animateLoad($searchBlock, "Last Updated: ".concat("updateTime"));
+			// 		// fillSearch($searchBlock, )
+			// 	};
+			// 	// $(".search-element-group").each(function() {
+			// 	// 	animateSearch(this);
+			// 	// });
+			// });
+			function submitText (value){
+				console.log('hello');
 				var submitToken = '<?php echo $token ?>';
 				var dataString = '&search_item=' + value + '&submit_token=' + submitToken;
 				var $searchBlock = createSearch(value);
+				animateFinish($searchBlock, 34, 'just now');
 				$.ajax({
 					type: "POST",
 					url: "includes/processInput.php",
@@ -278,7 +269,7 @@ SOFTWARE. -->
 							animateFinish($searchBlock, positive, timeAgo);
 
 						} else {
-							//Ben decide
+							searchError($searchBlock);
 						}
 					},
 					error: function(xhr, status, error) {
@@ -288,7 +279,7 @@ SOFTWARE. -->
 					}
 				});
 
-			}
+			};
 
 		</script>
 		<script type="text/javascript">
@@ -297,7 +288,7 @@ SOFTWARE. -->
 					var boxValue = $("#main-search-box").val();
 					if (boxValue.length > 3) {
 						$("#main-search-box").val("");
-						createSearch(boxValue, '10 hours ago', 87);
+						submitText( boxValue );
 						return false;
 					} else {
 						$("#main-toast").finish().animate({
@@ -309,6 +300,9 @@ SOFTWARE. -->
 					};
 				};
 		});
+		$("#main-credits-button").click(function() {
+			window.location.href = "credits.html";
+		})
 		</script>
 		<div class="" style="min-height: 100px;">
 
