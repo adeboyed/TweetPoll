@@ -222,6 +222,7 @@ a:focus {
 	position: relative;
 	height: 170px;
 	width: 700px;
+	opacity: 1;
 }
 
 .search-element-cross {

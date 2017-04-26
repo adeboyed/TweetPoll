@@ -163,23 +163,14 @@
 				$searchBlock.find(".search-element-search").html(name);
 				$searchBlock.find(".search-element-updated").html(loadingMessage.concat("..."));
 				$searchBlock.find(".search-element-cross").click(function() {
-					$searchBlock.fadeOut();
-					window.setTimeout(function() {
-						$searchBlock.remove();
-					}, 1000);
+					removeSearch($searchBlock);
 				});
 				$searchBlock.on('swiperight', function() {
-					$searchBlock.fadeOut();
-					window.setTimeout(function() {
-						$searchBlock.remove();
-					}, 1000);
+					removeSearch($searchBlock);
         });
         // Allows swiping left on the screen to close the sidebar
         $searchBlock.on('swipeleft', function(){
-					$searchBlock.fadeOut();
-					window.setTimeout(function() {
-						$searchBlock.remove();
-					}, 1000);
+					removeSearch($searchBlock);
         });
 				$searchBlock.removeClass("display-none");
 				animateLoad($searchBlock);
@@ -233,6 +224,17 @@
 				window.setTimeout(function() {
 					$($element).remove();
 				}, 4000);
+			};
+			function removeSearch($element) {
+				$($element).velocity({
+					opacity: "0",
+				}, 500);
+				$($element).velocity({
+					height: "0px",
+				}, 500);
+				window.setTimeout(function() {
+					$($element).remove();
+				}, 1000);
 			};
 
 			// $(document).ready(function() {
