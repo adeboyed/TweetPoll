@@ -37,41 +37,43 @@
 		<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
     <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
 		<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
-		<script src="js/vendor/jquery.min.js"></script>
-		<script type="text/javascript" src="js/velocity.min.js"></script>
+
 	</head>
 	<body>
-		<div id="bg-img"></div>
-		<div id="bg-overlay"></div>
-		<div id="main-toast">Sorry we don't harvest strings fewer than 4 characters!</div>
-		<div id="main-credits-button">
-			<h3 id="main-button-text">Credits</h3>
-		</div>
-		<h1 id="main-title">TweetPoll</h1>
-		<input type="text" name="" id="main-search-box"
-			maxlength="24" placeholder="Query the opinion harvester...">
-		<div id="searches-container">
-			<div class="search-element-group-template display-none">
-				<h2 class="search-element-search">Jeremy Corbyn</h2>
-				<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
-				<div class="search-element-bars">
-					<div class="search-element-loading">
-						<div class="search-element-loading-overlay"></div>
-					</div>
-					<div class="search-element-percentage">
-						<div class="search-element-green"></div>
-						<div class="search-element-red"></div>
-					</div>
-				</div>
-				<div class="search-element-cross">
-					<div class="search-element-cross-1"></div>
-					<div class="search-element-cross-2"></div>
-				</div>
-				<h3 class="search-percent-green">23%</h3>
-				<h3 class="search-percent-red">77%</h3>
-				<h3 class="search-element-error">The query got stuck in the straw chopper.. please try again...</h3>
-			</div>
+		<div id="body-wrapper">
 
+			<div id="bg-img"></div>
+			<div id="bg-overlay"></div>
+			<div id="main-toast">Sorry we don't harvest strings fewer than 4 characters!</div>
+			<div id="main-credits-button">
+				<h3 id="main-button-text">Credits</h3>
+			</div>
+			<h1 id="main-title">TweetPoll</h1>
+			<input type="text" name="" id="main-search-box"
+				maxlength="24" placeholder="Query the opinion harvester...">
+			<div id="searches-container">
+				<div class="search-element-group-template display-none">
+					<h2 class="search-element-search">Jeremy Corbyn</h2>
+					<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
+					<div class="search-element-bars">
+						<div class="search-element-loading">
+							<div class="search-element-loading-overlay"></div>
+						</div>
+						<div class="search-element-percentage">
+							<div class="search-element-green"></div>
+							<div class="search-element-red"></div>
+						</div>
+					</div>
+					<div class="search-element-cross">
+						<div class="search-element-cross-1"></div>
+						<div class="search-element-cross-2"></div>
+					</div>
+					<h3 class="search-percent-green">23%</h3>
+					<h3 class="search-percent-red">77%</h3>
+					<h3 class="search-element-error">The query got stuck in the straw chopper.. please try again...</h3>
+				</div>
+
+			</div>
 		</div>
 
 		<!-- <div id="page-container">
@@ -100,6 +102,10 @@
 
 			</canvas>
 		</div> -->
+		<script src="js/vendor/jquery.min.js"></script>
+		<script type="text/javascript" src="js/velocity.min.js"></script>
+		<script type="text/javascript" src="js/jquery-migrate-3.0.0.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript">
 			var loadingMessages = [
 									"Locating renderable gigapixels",
@@ -183,9 +189,25 @@
 				$searchBlock.prependTo("#searches-container");
 				$searchBlock.find(".search-element-search").html(name);
 				$searchBlock.find(".search-element-updated").html(loadingMessage.concat("..."));
-				$(".search-element-cross").click(function() {
-					$(this).parent().remove();
+				$searchBlock.find(".search-element-cross").click(function() {
+					$searchBlock.fadeOut();
+					window.setTimeout(function() {
+						$searchBlock.remove();
+					}, 1000);
 				});
+				$searchBlock.on('swiperight', function() {
+					$searchBlock.fadeOut();
+					window.setTimeout(function() {
+						$searchBlock.remove();
+					}, 1000);
+        });
+        // Allows swiping left on the screen to close the sidebar
+        $searchBlock.on('swipeleft', function(){
+					$searchBlock.fadeOut();
+					window.setTimeout(function() {
+						$searchBlock.remove();
+					}, 1000);
+        });
 				$searchBlock.removeClass("display-none");
 				animateLoad($searchBlock);
 				return $searchBlock;
@@ -311,8 +333,5 @@
 				};
 			});
 		</script>
-		<div class="" style="min-height: 100px;">
-
-		</div>
 	</body>
 </html>

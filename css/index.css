@@ -354,6 +354,17 @@ a:focus {
 	display: none;
 }
 
+#body-wrapper {
+		display: flex;
+    justify-content: center;
+    position: relative;
+    min-height: 100vh;
+    height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+		min-width: 100vw;
+}
+
 @media screen and (max-width: 900px) {
 	.search-element-cross {
 		display: none;
