@@ -255,7 +255,6 @@
 				var submitToken = '<?php echo $token ?>';
 				var dataString = '&search_item=' + value + '&submit_token=' + submitToken;
 				var $searchBlock = createSearch(value);
-				animateFinish($searchBlock, 34, 'just now');
 				$.ajax({
 					type: "POST",
 					url: "includes/processInput.php",
