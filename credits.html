@@ -45,31 +45,34 @@
 	<body>
 		<div id="bg-img"></div>
 		<div id="bg-overlay"></div>
+		<div id="main-home-button">
+			<h3 id="main-button-text">Home</h3>
+		</div>
 		<h1 id="main-title">TweetPoll</h1>
-		<div id="searches-container">
-			<h2>TweetPoll is for gathering the public's opinion on a particular topic using tweets.</h2>
+		<div id="credits-container">
+			<h2>TweetPoll gathers the public's opinion on a particular topic using tweets.</h2>
 			<h5>Please note, we take no responsibility for the results produced by the output of this website. This website uses the latest public tweets to calculate its results and uses common machine learning algorithms to calculate opinion. Any apparent favouring of a person or entity due to the machine learning is purely accidental and not intentional.</h5>
 			<br>
 			<h2>Contact Us</h2>
 			<p>
-				General Information: <a href="mailto:info@tweetpoll.co">info@tweetpoll.co</a>
+				General Information: <a href="mailto:info@tweetpoll.co"> info@tweetpoll.co</a>
 			</p>
-			
+
 			<p>
-				Advertising Information: <a href="advertising:info@tweetpoll.co">advertising@tweetpoll.co</a>
+				Advertising Information: <a href="advertising:info@tweetpoll.co"> advertising@tweetpoll.co</a>
 			</p>
-			
+
 			<!--<h2>Recent Press</h2> -->
 			<br>
 			<h2>Creators</h2>
 			<ul>
 				<li><a href="http://www.dmapstudios.co.uk/">David Adeboye</a></li>
-				<li><a href="">Ben Curnow</a></li>
+				<li><a href="http://github.com/bencurnow">Ben Curnow</a></li>
 				<li><a href="https://www.linkedin.com/in/harri-bell-thomas-b1860a71/">Harri Bell-Thomas</a></li>
 				<li><a href="https://www.linkedin.com/in/henrymattinson/">Henry Mattinson</a></li>
 				<li><a href="http://carlospurves.com/">Carlos Purves</a></li>
 			</ul>
-			
+
 			<p>	&copy; TweetPoll 2017. All Rights Reserved.</p>
 		</div>
 
@@ -77,5 +80,10 @@
 		<div class="" style="min-height: 100px;">
 
 		</div>
+		<script type="text/javascript">
+		$("#main-home-button").click(function() {
+			window.location.href = "index.html";
+		})
+		</script>
 	</body>
 </html>

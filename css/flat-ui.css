@@ -1,4 +1,4 @@
-@font-face {
+/*@font-face {
   font-family: 'Lato';
   src: url('../fonts/lato/lato-black.eot');
   src: url('../fonts/lato/lato-black.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-black.woff') format('woff'), url('../fonts/lato/lato-black.ttf') format('truetype'), url('../fonts/lato/lato-black.svg#latoblack') format('svg');
@@ -44,7 +44,7 @@
   font-family: 'Flat-UI-Icons';
   src: url('../fonts/glyphicons/flat-ui-icons-regular.eot');
   src: url('../fonts/glyphicons/flat-ui-icons-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons/flat-ui-icons-regular.woff') format('woff'), url('../fonts/glyphicons/flat-ui-icons-regular.ttf') format('truetype'), url('../fonts/glyphicons/flat-ui-icons-regular.svg#flat-ui-icons-regular') format('svg');
-}
+}*/
 [class^="fui-"],
 [class*="fui-"] {
   font-family: 'Flat-UI-Icons';

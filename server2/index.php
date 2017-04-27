@@ -3,6 +3,9 @@
 	$ignore = true;
 	header('Content-Type: application/json');
 	require_once('exportClass.php');
+	require_once 'insight/autoload.php';
+	require_once('twitterInterface.php');
+
 	
 	if ( isset( getallheaders() ['TweetPoll-Header'] ) ){
 		$header = getallheaders() ['TweetPoll-Header'];
@@ -38,76 +41,116 @@
 		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
 	}
 
-	function time_elapsed_string($datetime, $full = false) {
-		$now = new DateTime;
-		$ago = new DateTime($datetime);
-		$diff = $now->diff($ago);
-
-		$diff->w = floor($diff->d / 7);
-		$diff->d -= $diff->w * 7;
-
-		$string = array(
-			'y' => 'year',
-			'm' => 'month',
-			'w' => 'week',
-			'd' => 'day',
-			'h' => 'hour',
-			'i' => 'minute',
-			's' => 'second',
-		);
-		foreach ($string as $k => &$v) {
-			if ($diff->$k) {
-				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-			} else {
-				unset($string[$k]);
-			}
+	function generateNewResult( $query ) {
+		$tweets = getTweets( $query, 50 );
+		
+		if ( is_array( $tweets ) && sizeof( $tweets ) > 0 ){
+			$result = naiveBayes( $tweets );
+			$result = normalise( $result );
+			//sleep(3);
+			$result->status = true;
+			$result->query = ucwords ( $query );
+			$result->timeAgo = "Just Now";
+		}else {
+			errorMessage(14);
 		}
-
-		if (!$full) $string = array_slice($string, 0, 1);
-		return $string ? implode(', ', $string) . ' ago' : 'just now';
+		
+		return $result;
 	}
 
-	function generateNewResult( $query ) {
-		$tweets = getTweets( $query, 100 );
+	function getTweets( $query, $num ){
+		$interface = new TwitterInterface();
+		return $interface->getTweets( $query, $num );
+	}
+
+	function azureML( $tweets ){
+		$toSend = array();
+		$i = 1;
+		foreach ( $tweets as &$value ){
+			$tweet = new azureDocuments;
+			$tweet->language = 'en';
+			$tweet->id = $i;
+			$tweet->text = $value;
+			
+			array_push( $toSend, $tweet );
+				
+			$i++;
+		}
+		
+		$headers = array(
+			'Ocp-Apim-Subscription-Key' => '0adc559e358f438aa531b30b6ac806ee',
+			'Content-Type' => 'application/json',
+			'Accept' => 'application/json'
+		);
+		
+		$options = array(
+			'documents' => $toSend,
+		);
+		
+		$response = Requests::post( 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment' , $headers, json_encode( $options ) );
+		$body = $response->body;
+		
+		$returnItem = json_decode( $body );
+		
+		$documents = $returnItem->documents;
 		
 		$positive = 0;
 		$negative = 0;
 		
-		$result = new exportClass;
-		
-		foreach ( $tweets as &$value ){
-			$score = naiveBayes ( $value );
+		foreach ( $documents as &$value ){
+			$score = $value->score;
 			
 			if ( $score >= 0.5 ){
 				$positive++;
 			}else {
 				$negative++;
 			}
-			
 		}
 		
-		$result->query = ucwords ( $query );
+		$result = new exportClass;
 		$result->positive = $positive;
 		$result->negative = $negative;
-		$result->timeAgo = "Just Now";
+		
+		//var_dump ( $result );
 		
 		return $result;
 	}
 
-	function getTweets( $query, $num ){
-		$array = array();
+	function naiveBayes( $tweets ){
 		
-		for ( $i = 0; $i < 100; $i++ ){
-			$text = 'I am a tweet';
-			array_push( $array, $text );
+		$sentiment = new \PHPInsight\Sentiment();
+		$result = new exportClass;
+		$result->positive = 0;
+		$result->negative = 0;
+		
+		foreach ( $tweets as &$value ){
+			$class = $sentiment->categorise( $value );
+			$scores = $sentiment->score($value);
+			if ( $scores['neg'] > 0.40 ){
+				$result->negative++;
+			} 
+			if ( $scores['pos'] > 0.40  ){
+				$result->positive++;
+			}
 		}
-		
-		return $array;
+		return $result;
 	}
 
-	function naiveBayes( $text ){
-		return mt_rand() / mt_getrandmax();
+	function normalise ( $result ){
+		$total = $result->positive + $result->negative;
+		$result->realTotal = $total;
+		
+		if ( $total == 100 ) return $result;
+		
+		$posPercent = $result->positive / $total;
+		$negPercent = $result->negative / $total;
+		
+		$result->positive = (int) round( $posPercent * 100 );
+		$result->negative = (int) round( $negPercent * 100 );
+		
+		return $result;
 	}
+
 
 	function errorMessage( $messageNo ){
 		$class = new exportClass;

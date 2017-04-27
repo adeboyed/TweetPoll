@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL); ini_set('display_errors', 1);
+
 /*
  * TweetPoll Twitter Interface
  */
@@ -16,8 +16,8 @@ class TwitterInterface {
     private $settings;
     private $exchange;
     private $target = '_TweetPoll';
-    public $data;
-    private $debug = false;
+    private $data;
+    private $debug = true;
 
     public function __construct() {
         $this->settings = array(
@@ -40,6 +40,7 @@ class TwitterInterface {
         else $this->data = [];
 
         $getfield = '?q=' . urlencode($query) . "&lang=en&count=100" . $cursor_param;
+
         $twitter = new TwitterAPIExchange($this->settings);
         $results = $twitter->setGetfield($getfield)->buildOauth($url, 'GET')->performRequest();
         $results = json_decode($results, true);

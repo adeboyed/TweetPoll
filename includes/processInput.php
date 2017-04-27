@@ -17,7 +17,7 @@
 		$tokenFromPost = filter_input(INPUT_POST, 'submit_token');
 		
 		if ( strcmp ( $tokenFromSession, $tokenFromPost ) !== 0 ){
-			errorMessage( $tokenFromSession . ' ' . $tokenFromPost );
+			//errorMessage( $tokenFromSession . ' ' . $tokenFromPost );
 		}
 	}
 
@@ -53,13 +53,14 @@
 		errorMessage(101);
 	}
 
-	$stmtLog = $mysqli_conn->prepare("INSERT INTO search_log ( search_query, search_time ) VALUES ( ?, NOW() ) ");
-	$stmtLog->bind_param('s', $value );
+	$stmtLog = $mysqli_conn->prepare("INSERT INTO search_log ( search_query ) VALUES ( ? ) ");
+	$stmtLog->bind_param('s', $searchItem );
 	$stmtLog->execute();
+	
 	$stmtLog->close();
 
 	$stmt = $mysqli_conn->prepare("SELECT search_result, search_time FROM search_items WHERE search_query = ? AND search_time >= now() - interval 60 minute LIMIT 1");
-	$stmt->bind_param('s', $value );
+	$stmt->bind_param('s', $searchItem );
 	$stmt->execute();
 	$stmt->store_result();
 	$stmt->bind_result( $result, $time );
@@ -79,18 +80,53 @@
 
 		$response = Requests::post( SERVER_2_ADDRESS , $headers, $options );
 		$body = $response->body;
-		$returnItem = json_encode( $body );
+		$returnItem = json_decode( $body );
+		
+		if ( $returnItem != null ){
+			$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_items ( search_query, search_result, search_time ) VALUES ( ? , ? , NOW() )");
+			$stmtAdd->bind_param('ss', $searchItem, $body );
+			$stmtAdd->execute();
+			$stmtAdd->close();
+		}else {
+			$mysqli_conn->close(); 
+			errorMessage(9);
+		}
 
-		$stmtAdd = $mysqli_conn->prepare("INSERT INTO search_items ( search_query, search_result, search_time ) VALUES ( ? , ? , NOW() )");
-		$stmtAdd->bind_param('ss', $value, $body );
-		$stmtAdd->execute();
-		$stmtAdd->close();
+		
 	} 
 	
 	$mysqli_conn->close(); 
 
+	echo json_encode( $returnItem );
 
-	echo json_decode( $returnItem );
+	function time_elapsed_string($datetime, $full = false) {
+		$now = new DateTime;
+		$ago = new DateTime($datetime);
+		$diff = $now->diff($ago);
+
+		$diff->w = floor($diff->d / 7);
+		$diff->d -= $diff->w * 7;
+
+		$string = array(
+			'y' => 'year',
+			'm' => 'month',
+			'w' => 'week',
+			'd' => 'day',
+			'h' => 'hour',
+			'i' => 'minute',
+			's' => 'second',
+		);
+		foreach ($string as $k => &$v) {
+			if ($diff->$k) {
+				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+			} else {
+				unset($string[$k]);
+			}
+		}
+
+		if (!$full) $string = array_slice($string, 0, 1);
+		return $string ? implode(', ', $string) . ' ago' : 'just now';
+	}
 
 	function coolCheck($string) {
 		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
