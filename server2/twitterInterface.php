@@ -78,4 +78,5 @@ class TwitterInterface {
  // function test() {
  //     $interface = new TwitterInterface();
  //     $interface->getTweets("Theresa May", 250);
+ //     $interface->data;
  // }
