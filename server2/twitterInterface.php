@@ -37,21 +37,24 @@ class TwitterInterface {
     private $settings;
     private $exchange;
     private $target = '_TweetPoll';
-    private $data;
+    public $data;
     private $debug = true;
 
-    public
-    function __construct() {
-       $this->exchange = new TwitterAPIExchange($this->settings);
-    }
 
     private function useSettings($i) {
+        $oauth_access_token = "oAuthToken_" . $i;
+        $oauth_access_token_secret = "oAuthSecret_" . $i;
+        $consumer_key = "consumerKey_" . $i;
+        $consumer_secret = "consumerSecret_" . $i;
+
         $this->settings = array(
-           'oauth_access_token' => $this->oAuthToken_$i,
-           'oauth_access_token_secret' => $this->oAuthSecret_$i,
-           'consumer_key' => $this->consumerKey_$i,
-           'consumer_secret' => $this->consumerSecret_$i
+           'oauth_access_token' => $this->$oauth_access_token,
+           'oauth_access_token_secret' => $this->$oauth_access_token_secret,
+           'consumer_key' => $this->$consumer_key,
+           'consumer_secret' => $this->$consumer_secret
        );
+
+       $this->exchange = new TwitterAPIExchange($this->settings);
     }
 
     public function getTweets($query, $number, $cursor = '') {

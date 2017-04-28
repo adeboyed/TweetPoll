@@ -14,5 +14,5 @@ function test() {
     print_r($interface->data);
     echo '</pre>';
 }
-//test();
+test();
 ?>
