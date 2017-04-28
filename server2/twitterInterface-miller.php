@@ -8,7 +8,7 @@ require_once('Exchange.php');
 class TwitterInterface {
 
     // App Keys
-    private $keysets = 2;
+    private $keysets = 5;
 
     // 1
     private $consumerKey_1 = 'poYRp6UiZQYinFRU7cHGkSk0F';
@@ -23,16 +23,22 @@ class TwitterInterface {
     private $oAuthSecret_2 = 'TIDkf6ePWgcjWuPIwhrV5bgg810t82sVzltHeO21PKtGH';
 
     // 3
-    private $consumerKey_3 = 'cbT9hdwPgCgcRH1NA0enIZTIx';
-    private $consumerSecret_3 = 'u0l9sE4rVpIQBDJXDVkXEETblfToKFpMsBwsWI2EdBcqCzaB6q';
-    private $oAuthToken_3 = '856985557385269248-IJnB0cQ1RdgRf7nYgRjTjifmM0WhyqW';
-    private $oAuthSecret_3 = 'jBPa6VmxNaXuN9EeAz1uV2OLrBQEq5YgKi7yoeLfIaNbP';
+    private $consumerKey_3 = 'iwzLqe3XbL76G4UbrLu52ssOI';
+    private $consumerSecret_3 = 'XbYClXeU20HtRqmjQwRi4m5kOu9CDVpapCXABUZAc6GYe11vLf';
+    private $oAuthToken_3 = '853915504687407104-Subi3KJyt7mxalmGiZZuX8T4EwV2j7R';
+    private $oAuthSecret_3 = '0wEf4iDrY4xKt3XvIC4HY9gPD76UPooZU1wEUhGwSQ5l3';
 
     // 4
-    private $consumerKey_4 = '1gjylV87gbqFOBUSD6SqerRLJ';
-    private $consumerSecret_4 = 'jhsG7nGmqqgXaFxuCbqxxuYe5CorQLPwY2ocZCHRdj8bwTLmPl';
-    private $oAuthToken_4 = '856985557385269248-4EJ35JJOjGfgKT59QTszpqocvNNwV3a';
-    private $oAuthSecret_4 = 'NOl5G00nOqUCKmRQWvADopbrQ8rrIYmkAjk7mnWjbObrC';
+    private $consumerKey_4 = '7zh6MKjlE3j1gSA4VTAlqSNMr';
+    private $consumerSecret_4 = 'f1T1CmezuK8X71TZTp55S8t9by84Fgl4q2jli0PBbGd2R6gzxn';
+    private $oAuthToken_4 = '853915504687407104-KphXdgWVnF0mBJulLeR2l3RHm93R5U7';
+    private $oAuthSecret_4 = 'DRk4G3cSaKhil3ZYAa9fRNCvbSoZ52cyQpmmsH0GSu2Hl';
+
+    // 5
+    private $consumerKey_5 = '4xUf7NO40e12kPngZVAImqw84';
+    private $consumerSecret_5 = 'l9ARfWvBzH67wilMnFTBwbAy3k5pMExKn0QhFDUkQ4cyQzYbD3';
+    private $oAuthToken_5 = '853915504687407104-RGGKy8PljRJvdzgRxBO2eBt80XL4L1G';
+    private $oAuthSecret_5 = 'ZpTRags4GsKPjk8VPaYRTsUyar8B2nBBrl2uXyePE3UIm';
 
     private $settings;
     private $exchange;
