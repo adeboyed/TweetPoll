@@ -8,7 +8,7 @@ require_once('Exchange.php');
 class TwitterInterface {
 
     // App Keys
-    private $keysets = 5;
+    private $keysets = 6;
 
     // 1
     private $consumerKey_1 = 'GB56YcodmfbyedX5x9Ng0Zivh';
@@ -39,6 +39,12 @@ class TwitterInterface {
     private $consumerSecret_5 = 'tYwTA98FuyjUQCvRRDCw9LyKWJNVzKptrVkxAxnEeiuWVuO5hY';
     private $oAuthToken_5 = '853915504687407104-hHHIXXlGPG39SftkLfKQpLmRlu885m1';
     private $oAuthSecret_5 = 'lg96plhXZvzjQMlSzB3rm3DiOfxSZNdxHz5GUxQ7hwWTu';
+
+    // 6
+    private $consumerKey_6 = 'OPdLQky2F4Y94UeBIEfgzinnh';
+    private $consumerSecret_6 = 'MdUqiEeJo20AnPi1Gs8UsfsCEO2Jil0cSs48xwWG9G65B4Ujl8';
+    private $oAuthToken_6 = '2786239599-OGBWo17EHgWBExwzo37tFWK2xDLSZWeHaK2b7xl';
+    private $oAuthSecret_6 = 'ZGz2aim9PaMJFgZbHRGmrLneuIhNhp8scvdtWzYosZAV0';
 
     private $settings;
     private $exchange;
