@@ -4,7 +4,7 @@
 	header('Content-Type: application/json');
 	require_once('exportClass.php');
 	require_once 'insight/autoload.php';
-	require_once('twitterInterface.php');
+	require_once('twitterInterface-miller.php');
 
 	
 	if ( isset( getallheaders() ['TweetPoll-Header'] ) ){
@@ -42,12 +42,11 @@
 	}
 
 	function generateNewResult( $query ) {
-		$tweets = getTweets( $query, 50 );
+		$tweets = getTweets( $query, 250 );
 		
 		if ( is_array( $tweets ) && sizeof( $tweets ) > 0 ){
 			$result = naiveBayes( $tweets );
 			$result = normalise( $result );
-			//sleep(3);
 			$result->status = true;
 			$result->query = ucwords ( $query );
 			$result->timeAgo = "Just Now";
@@ -60,7 +59,8 @@
 
 	function getTweets( $query, $num ){
 		$interface = new TwitterInterface();
-		return $interface->getTweets( $query, $num );
+		$interface->getTweets( $query, $num );
+		return $interface->data;;
 	}
 
 	function azureML( $tweets ){
@@ -110,8 +110,7 @@
 		$result = new exportClass;
 		$result->positive = $positive;
 		$result->negative = $negative;
-		
-		//var_dump ( $result );
+		unset( $result->errorNo );
 		
 		return $result;
 	}
@@ -138,7 +137,6 @@
 
 	function normalise ( $result ){
 		$total = $result->positive + $result->negative;
-		$result->realTotal = $total;
 		
 		if ( $total == 100 ) return $result;
 		

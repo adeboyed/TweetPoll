@@ -8,10 +8,17 @@
 
 	define( 'SERVER_2_ADDRESS', 'http://localhost/server2/index.php' );
 
+	$serverNo = 2;
+
+	$backendServers = array (
+		'http://api.tweetpoll.co/',
+		'http://api2.tweetpoll.co/'
+	);
+
 	//CHECKING THE TOKEN
 	
 	if ( !isset( $_SESSION['s_token'] ) || !isset( $_POST['submit_token'] )  ){
-		errorMessage(0);
+		errorMessage(0, null);
 	}else {
 		$tokenFromSession = $_SESSION['s_token'];
 		$tokenFromPost = filter_input(INPUT_POST, 'submit_token');
@@ -31,16 +38,22 @@
 	//GETTING THE DATA AND 
 
 	$searchItem = filter_input(INPUT_POST, 'search_item');
+	$searchSize = $_POST['_size'];
+	$searchSize = intval( $searchSize );
 	$searchItem = trim( $searchItem );
 
 	if ( $searchItem == null ){
-		errorMessage( 3 );
+		errorMessage( 3 , null);
 	}else if ( !$searchItem ){
-		errorMessage( 3 );
+		errorMessage( 3 , null);
 	}else if ( strlen( $searchItem ) < 4 || strlen( $searchItem ) > 30 ){
-		errorMessage( 3 );
+		errorMessage( 3 , null);
 	}else if ( !coolCheck ( $searchItem ) ){
-		errorMessage( 3 );
+		errorMessage( 3 , null);
+	}else if ( $searchSize === null ){
+		errorMessage( 41 , null);
+	}else if ( $searchSize == 2 || ( $searchSize < 0 && $searchSize != -238) ){
+		errorMessage( 43 , null);
 	}
 
 	$searchItem = strip_tags( $searchItem );
@@ -50,7 +63,7 @@
 
 	$mysqli_conn = new mysqli( $db_host, $db_username, $db_password,$db_name );
 	if ( $mysqli_conn->connect_error ) {
-		errorMessage(101);
+		errorMessage( 101 , null);
 	}
 
 	$stmtLog = $mysqli_conn->prepare("INSERT INTO search_log ( search_query ) VALUES ( ? ) ");
@@ -77,8 +90,11 @@
 		$options = array(
 			'item' => $searchItem
 		);
-
-		$response = Requests::post( SERVER_2_ADDRESS , $headers, $options );
+		
+		$serverNum = (date('s') % $serverNo);
+		$address = $backendServers[$serverNum];
+		
+		$response = Requests::post( $address , $headers, $options );
 		$body = $response->body;
 		$returnItem = json_decode( $body );
 		
@@ -89,13 +105,12 @@
 			$stmtAdd->close();
 		}else {
 			$mysqli_conn->close(); 
-			errorMessage(9);
+			var_dump( $body );
+			errorMessage(9, $body);
 		}
-
-		
 	} 
 	
-	$mysqli_conn->close(); 
+	$mysqli_conn->close();
 
 	echo json_encode( $returnItem );
 
@@ -132,9 +147,14 @@
 		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
 	}
 
-	function errorMessage( $messageNo ){
+	function errorMessage( $messageNo, $body ){
 		$class = new exportClass;
 		$class->status = false;
+		
+		if ( $body != null ){
+			$class->body = $body;	
+		}
+		
 		$class->errorNo = $messageNo;
 		echo json_encode( $class );
 		exit();

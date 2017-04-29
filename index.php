@@ -5,79 +5,47 @@
 	$token = generateRandomString( 20 );
 	$_SESSION['s_token'] = $token;
 
-	if ( isset( $_GET['p1'] ) ){
-		
+	$i = 1;
+
+	while ( isset( $_GET['p' . $i ] )  ){
 		$ignore = false;
-		$searchItem = filter_input(INPUT_GET, 'p1');
+		$searchItem = filter_input(INPUT_GET, 'p' . $i );
+		$searchItem = str_replace ( "_", " ", $searchItem );
 		$searchItem = strip_tags( trim( $searchItem ) );
 		$searchItem = strtolower( $searchItem );
 		if ( !$searchItem ) $ignore = true;
 		if ( strlen( $searchItem ) < 3 || strlen( $searchItem ) > 30 ) $ignore = true;
-		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
+		if ( !coolCheck ( $searchItem ) ) $ignore = true;
 		
 		if ( !$ignore ){
 			array_push( $searchItems, $searchItem );
 		}
+		$i++;
 	}
 
-	if ( isset( $_GET['p2'] ) ){
-		
-		$ignore = false;
-		$searchItem = filter_input(INPUT_GET, 'p2');
-		$searchItem = strip_tags( trim( $searchItem ) );
-		$searchItem = strtolower( $searchItem );
-		if ( !$searchItem ) $ignore = true;
-		if ( strlen( $searchItem ) < 3 || strlen( $searchItem ) > 30 ) $ignore = true;
-		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
-		
-		if ( !$ignore ){
-			array_push( $searchItems, $searchItem );
-		}
+	$defaultSearches = "";
+	
+	$ip = getUserIP();
+	if (strpos($ip, ',') !== false) {
+		$ips = explode ( ',', $ip );
+		$ip = $ips[0];
 	}
 
-	if ( isset( $_GET['p3'] ) ){
+	if ( strcmp ( $ip, 'null' ) != 0 ){
+		$country = file_get_contents("http://ipinfo.io/$ip/country");
+		$country = trim ( $country );
 		
-		$ignore = false;
-		$searchItem = filter_input(INPUT_GET, 'p3');
-		$searchItem = strip_tags( trim( $searchItem ) );
-		$searchItem = strtolower( $searchItem );
-		if ( !$searchItem ) $ignore = true;
-		if ( strlen( $searchItem ) < 3 || strlen( $searchItem ) > 30 ) $ignore = true;
-		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
-		
-		if ( !$ignore ){
-			array_push( $searchItems, $searchItem );
+		if ( strcmp ( $country, 'GB' ) == 0 ){
+			$defaultSearches = "var defaultSearches = ['Jeremy Corbyn', 'Theresa May'];";
+		}else {
+			$defaultSearches = "var defaultSearches = ['Twitter', 'Facebook'];";
 		}
+	}else {
+		$defaultSearches = "var defaultSearches = ['Twitter', 'Facebook'];";
 	}
-
-	if ( isset( $_GET['p4'] ) ){
-		
-		$ignore = false;
-		$searchItem = filter_input(INPUT_GET, 'p4');
-		$searchItem = strip_tags( trim( $searchItem ) );
-		$searchItem = strtolower( $searchItem );
-		if ( !$searchItem ) $ignore = true;
-		if ( strlen( $searchItem ) < 3 || strlen( $searchItem ) > 30 ) $ignore = true;
-		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
-		
-		if ( !$ignore ){
-			array_push( $searchItems, $searchItem );
-		}
-	}
-
-	if ( isset( $_GET['p5'] ) ){
-		
-		$ignore = false;
-		$searchItem = filter_input(INPUT_GET, 'p5');
-		$searchItem = strip_tags( trim( $searchItem ) );
-		$searchItem = strtolower( $searchItem );
-		if ( !$searchItem ) $ignore = true;
-		if ( strlen( $searchItem ) < 3 || strlen( $searchItem ) > 30 ) $ignore = true;
-		if ( !ctype_alnum ( $searchItem ) ) $ignore = true;
-		
-		if ( !$ignore ){
-			array_push( $searchItems, $searchItem );
-		}
+	
+	function coolCheck($string) {
+		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
 	}
 
 	function generateRandomString($length = 10) {
@@ -90,12 +58,33 @@
 		return $randomString;
 	};
 
+	function getUserIP() {
+		$ipaddress = '';
+		if (isset($_SERVER['HTTP_CLIENT_IP']))
+			$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+		else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+			$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		else if(isset($_SERVER['HTTP_X_FORWARDED']))
+			$ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+		else if(isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']))
+			$ipaddress = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+		else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+			$ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+		else if(isset($_SERVER['HTTP_FORWARDED']))
+			$ipaddress = $_SERVER['HTTP_FORWARDED'];
+		else if(isset($_SERVER['REMOTE_ADDR']))
+			$ipaddress = $_SERVER['REMOTE_ADDR'];
+		else
+			$ipaddress = 'null';
+		return $ipaddress;
+	}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=100%, initial-scale=1.0, maximum-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 		<meta name="description" content="TweetPoll gathers the public's opinion on a particular topic using tweets."/>
 		<meta name="author" content="TweetPoll">
 		<link rel="canonical" href="http://www.tweetpoll.co/" />
@@ -115,12 +104,12 @@
 
 		<title>TweetPoll</title>
 
-		<link href="/css/flat-ui.css" rel="stylesheet">
-		<link href="/css/index.css" rel="stylesheet" type="text/css" >
+		<link href="/css/flat-ui.css" rel="stylesheet" type="text/css">
+		<link href="/css/index.css" rel="stylesheet" type="text/css">
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
 		<!--[if lt IE 9]>
-		<script src="dist/js/vendor/html5shiv.js"></script>
-		<script src="dist/js/vendor/respond.min.js"></script>
+		<script src="/js/vendor/html5shiv.js"></script>
+		<script src="/js/vendor/respond.min.js"></script>
 		<![endif]-->
 
 		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/apple-touch-icon-57x57.png" />
@@ -136,7 +125,7 @@
 		<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16" />
 		<link rel="icon" type="image/png" href="/images/favicon-128.png" sizes="128x128" />
-		<meta name="application-name" content="&nbsp;"/>
+		<meta name="application-name" content="TweetPoll"/>
 		<meta name="msapplication-TileColor" content="#FFFFFF" />
 		<meta name="msapplication-TileImage" content="mstile-144x144.png" />
 		<meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
@@ -146,24 +135,41 @@
 
     	<link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
 		<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
+		
+		<!-- <script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-98198042-1', 'auto');
+		  ga('send', 'pageview');
+
+		</script> -->
 
 	</head>
 	<body>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<script>
+		  (adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-1161875130168523",
+			enable_page_level_ads: true
+		  });
+		</script>
 		<div id="body-wrapper">
-
 			<div id="bg-img"></div>
 			<div id="bg-overlay"></div>
 			<div id="main-toast">Sorry we don't harvest strings fewer than 4 characters!</div>
 			<div id="main-credits-button">
-				<h3 id="main-button-text">Credits</h3>
+				<h3 id="main-button-text">About</h3>
 			</div>
 			<h1 id="main-title">TweetPoll</h1>
 			<input type="text" name="" id="main-search-box"
 				maxlength="24" placeholder="Query the opinion harvester...">
 			<div id="searches-container">
 				<div class="search-element-group-template display-none">
-					<h2 class="search-element-search">Jeremy Corbyn</h2>
-					<h4 class="search-element-updated">Last Updated: 3 hours ago</h4>
+					<h2 class="search-element-search"></h2>
+					<h4 class="search-element-updated"></h4>
 					<div class="search-element-bars">
 						<div class="search-element-loading">
 							<div class="search-element-loading-overlay"></div>
@@ -177,17 +183,17 @@
 						<div class="search-element-cross-1"></div>
 						<div class="search-element-cross-2"></div>
 					</div>
-					<h3 class="search-percent-green">23%</h3>
-					<h3 class="search-percent-red">77%</h3>
+					<h3 class="search-percent-green"></h3>
+					<h3 class="search-percent-red"></h3>
 					<h3 class="search-element-error">The query got stuck in the straw chopper.. please try again...</h3>
 				</div>
 
 			</div>
 		</div>
-		<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
-		<script type="text/javascript" src="/js/velocity.min.js"></script>
-		<script type="text/javascript" src="/js/jquery-migrate-3.0.0.min.js"></script>
-		<script type="text/javascript" src="/js/jquery.mobile-1.4.5.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.0/jquery-migrate.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
 		<script type="text/javascript">
 			var loadingMessages = [
 									"Locating renderable gigapixels",
@@ -253,8 +259,13 @@
 									"Synthesising wavelets",
 									"Time-compressing simulator clock"
 								];
-		</script>
-		<script>
+			var currentSearches = [];
+			var submitToken = '<?php echo $token ?>';
+			
+			String.prototype.replaceAll = function(search, replacement) {
+				var target = this;
+				return target.replace(new RegExp(search, 'g'), replacement);
+			};
 			function getRandomInt(min, max) {
 			  min = Math.ceil(min);
 			  max = Math.floor(max);
@@ -287,7 +298,7 @@
 			};
 			function animateLoad($element) {
 				var setupTime = 400;
-				var loadingTime = getRandomInt(4000, 7000);
+				var loadingTime = getRandomInt(5000, 9000);
 				$($element).find(".search-element-search").velocity({
 					opacity: "1",
 				}, setupTime);
@@ -301,6 +312,8 @@
 					});
 			};
 			function animateFinish($element, greenPercent, updateTime) {
+				currentSearches.push( $element.find(".search-element-search").html() );
+				updateURL();
 				$($element).find(".search-percent-green").html(greenPercent.toString().concat("%"));
 				$($element).find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
 				$($element).find(".search-element-loading-overlay").velocity({
@@ -334,7 +347,22 @@
 					$($element).remove();
 				}, 4000);
 			};
+			function updateURL(){
+				var stringURL = "/";
+				for (search of currentSearches) {
+					var searchL = search.toLowerCase();
+					searchL = searchL.replaceAll(' ', '_');
+					stringURL = stringURL + searchL + "/";
+				};
+				stringURL = stringURL.substring(0, stringURL.length - 1);
+				history.pushState(null, null, stringURL );
+			}
 			function removeSearch($element) {
+				var index = currentSearches.indexOf( $element.find(".search-element-search").html() );
+				if (index > -1) {
+					currentSearches.splice(index, 1);
+				}
+				updateURL();
 				$($element).velocity({
 					opacity: "0",
 				}, 500);
@@ -345,21 +373,9 @@
 					$($element).remove();
 				}, 1000);
 			};
-
-			// $(document).ready(function() {
-			// 	for (search of searches) {
-			// 		$searchBlock = createSearch(search[0], search[1], search[2]);
-			// 		animateLoad($searchBlock, "Last Updated: ".concat("updateTime"));
-			// 		// fillSearch($searchBlock, )
-			// 	};
-			// 	// $(".search-element-group").each(function() {
-			// 	// 	animateSearch(this);
-			// 	// });
-			// });
 			function submitText (value){
-				console.log('hello');
-				var submitToken = '<?php echo $token ?>';
 				var dataString = '&search_item=' + value + '&submit_token=' + submitToken;
+				console.log(dataString);
 				var $searchBlock = createSearch(value);
 				$.ajax({
 					type: "POST",
@@ -379,14 +395,11 @@
 					},
 					error: function(xhr, status, error) {
 						console.log(xhr.responseText);
-					  //var err = JSON.parse(xhr.responseText);
-					  //alert(err.Message);
 					}
 				});
-
 			};
-
 		</script>
+		<script src="/js/ads.js"></script>
 		<script type="text/javascript">
 		$('#main-search-box').keypress(function (e) {
 				if (e.which == 13) {
@@ -406,8 +419,8 @@
 				};
 		});
 		$("#main-credits-button").click(function() {
-			window.location.href = "credits.html";
-		})
+			window.location.href = "/credits.html";
+		});
 		</script>
 		<script type="text/javascript">
 			<?php
@@ -422,7 +435,7 @@
 					}
 					echo '];';
 				}else {
-					echo "var defaultSearches = ['Jeremy Corbyn', 'Theresa May'];";
+					echo $defaultSearches;
 				}
 			?>
 			$(document).ready(function() {

@@ -6,6 +6,7 @@
 		var $positive;
 		var $negative;
 		var $timeAgo;
+		var $server = 'm';
 	}
 
 	class azureDocuments {
