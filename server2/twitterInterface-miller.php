@@ -50,7 +50,7 @@ class TwitterInterface {
     private $exchange;
     private $target = '_TweetPoll';
     public $data;
-    private $debug = true;
+    private $debug = false;
 
 
     private function useSettings($i) {
@@ -69,16 +69,20 @@ class TwitterInterface {
        $this->exchange = new TwitterAPIExchange($this->settings);
     }
 
-    public function getTweets($query, $number, $cursor = '') {
-
+    public function getTweets($query, $number, $depth, $cursor = '') {
+		
         $this->useSettings((date('i') % $this->keysets) + 1);
 
         $url = 'https://api.twitter.com/1.1/search/tweets.json';
         $cursor_param = '';
         $next = $number;
 
-        if($cursor !== '') $cursor_param = '&max_id='.$cursor;
+        if( $cursor !== '' ) $cursor_param = '&max_id='.$cursor;
         else $this->data = [];
+		
+		if ( $depth == 0 ){
+			return $this->data;
+		}
 
         $getfield = '?q=' . urlencode($query) . "&lang=en&count=100" . $cursor_param;
 
@@ -86,30 +90,33 @@ class TwitterInterface {
         $results = $twitter->setGetfield($getfield)->buildOauth($url, 'GET')->performRequest();
         $results = json_decode($results, true);
 
-        if(!isset($results['errors'])){
+        if ( !isset( $results['errors'] ) ) {
             $cursor = 0;
-            foreach ($results['statuses'] as $tweet) {
-                if($tweet['user']['followers_count'] > 50) {
-                    if($next > 0) {
-                        array_push($this->data, $tweet['text']);
+            foreach ( $results['statuses'] as $tweet ) {
+                if( $tweet['user']['followers_count'] > 30 ) {
+                    if( $next > 0 ) {
+                        array_push( $this->data, $tweet['text'] );
                         $next--;
                     }
                 }
                 $cursor = $tweet['id'];
             }
 
-            if($cursor > 0 && $next > 0) {
-                $this->getTweets($query, $next, $cursor);
+            if( $cursor > 0 && $next > 0 ) {
+                $this->getTweets( $query, $next, $depth - 1, $cursor );
             } else {
                 return $this->data;
             }
-        }
-
-        else {
-            if($this->debug) print($results['errors'][0]['message']);
+        } else {
+            if ( $this->debug ){
+				print( $results['errors'][0]['message'] );
+			} else {
+				error_log( $results['errors'][0]['message'], 3, 'error.log' );
+			}
             return $this->data;
         }
     }
+	
 }
 
 /**

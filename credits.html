@@ -2,11 +2,26 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+		<meta name="description" content="TweetPoll gathers the public's opinion on a particular topic using tweets."/>
+		<meta name="author" content="TweetPoll">
+		<link rel="canonical" href="http://www.tweetpoll.co/" />
+
+		<meta property="og:title" content="TweetPoll"/>
+		<meta property="og:type" content="website"/>
+		<meta property="og:url" content="http://www.tweetpoll.co/"/>
+		<meta property="og:image" content="http://www.tweetpoll.co/images/apple-touch-icon-152x152.png"/>
+		<meta property="og:description" content="TweetPoll gathers the public's opinion on a particular topic using tweets."/>
+
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:site" content="@_TweetPoll"/>
+		<meta name="twitter:url" content="http://www.tweetpoll.co/"/>
+		<meta name="twitter:title" content="TweetPoll"/>
+		<meta name="twitter:image" content="http://www.tweetpoll.co/images/apple-touch-icon-152x152.png"/>
+		<meta name="twitter:description" content="TweetPoll gathers the public's opinion on a particular topic using tweets."/>
+		
 		<title>About TweetPoll</title>
-		<meta name="viewport" content="width=100%, initial-scale=1.0, maximum-scale=1.0">
-		<!-- Loading Bootstrap -->
-		<!-- <link href="css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
-		<!-- Loading Flat UI -->
+		
 		<link href="css/flat-ui.css" rel="stylesheet">
 		<link href="css/index.css" rel="stylesheet" type="text/css" >
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
@@ -35,12 +50,21 @@
 		<meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
 		<meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
 		<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
-    <link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
-		<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
-		<script src="js/vendor/jquery.min.js"></script>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-		<!-- <script type="text/javascript" src-"js/jquery.foggy.min.js"></script> -->
-		<script type="text/javascript" src="js/velocity.min.js"></script>
+		<link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
+		
+		
+		<!-- <script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-98198042-1', 'auto');
+		  ga('send', 'pageview');
+
+		</script> -->
+		
+		
 	</head>
 	<body>
 		<div id="bg-img"></div>
@@ -48,7 +72,7 @@
 		<div id="main-home-button">
 			<h3 id="main-button-text">Home</h3>
 		</div>
-		<h1 id="main-title">TweetPoll</h1>
+		<div id="main-title"><img src="/images/header_logo.png" height="100%" ></div>
 		<div id="credits-container">
 			<h2>TweetPoll gets the latest 250 tweets on the topic entered and rates them whether they are negative or postive.</h2>
 			<h5>Please note, we take no responsibility for the results produced by the output of this website. This website uses the latest public tweets to calculate its results and uses common machine learning algorithms to calculate opinion. Any apparent favouring of a person or entity due to the machine learning is purely accidental and not intentional.</h5>
@@ -79,9 +103,10 @@
 		<div class="" style="min-height: 100px;">
 
 		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script type="text/javascript">
 		$("#main-home-button").click(function() {
-			window.location.href = "/index.html";
+			window.location.href = "/index.php";
 		})
 		</script>
 	</body>

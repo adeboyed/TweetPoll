@@ -1,10 +1,11 @@
+
 <?php
 
 	$ignore = true;
 	header('Content-Type: application/json');
 	require_once('exportClass.php');
 	require_once 'insight/autoload.php';
-	require_once('twitterInterface-miller.php');
+	require_once('twitterInterface.php');
 
 	
 	if ( isset( getallheaders() ['TweetPoll-Header'] ) ){
@@ -28,6 +29,7 @@
 			$searchItem = strtolower( $searchItem );
 			
 			$returnItem = generateNewResult ( $searchItem );
+			
 			echo json_encode( $returnItem );
 			
 		}else {
@@ -38,7 +40,7 @@
 	}
 
 	function coolCheck($string) {
-		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
+		return preg_match("/^['.a-zA-Z0-9\s]*$/", $string);
 	}
 
 	function generateNewResult( $query ) {
@@ -46,10 +48,17 @@
 		
 		if ( is_array( $tweets ) && sizeof( $tweets ) > 0 ){
 			$result = naiveBayes( $tweets );
-			$result = normalise( $result );
-			$result->status = true;
-			$result->query = ucwords ( $query );
-			$result->timeAgo = "Just Now";
+			if ( $result->negative > 0 && $result->positive > 0 ){
+				$result->totalClassified = $result->positive + $result->negative;
+				$result = normalise( $result );
+				$result->status = true;
+				$result->query = ucwords ( $query );
+				$result->timeAgo = "Just Now";
+				$result->totalOut = sizeof( $tweets );
+				unset( $result->errorNo );
+			}else {
+				errorMessage(15);
+			}
 		}else {
 			errorMessage(14);
 		}
@@ -59,7 +68,7 @@
 
 	function getTweets( $query, $num ){
 		$interface = new TwitterInterface();
-		$interface->getTweets( $query, $num );
+		$interface->getTweets( $query, $num, 7 );
 		return $interface->data;;
 	}
 
@@ -132,6 +141,7 @@
 				$result->positive++;
 			}
 		}
+		
 		return $result;
 	}
 

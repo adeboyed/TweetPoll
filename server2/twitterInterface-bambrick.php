@@ -8,43 +8,43 @@ require_once('Exchange.php');
 class TwitterInterface {
 
     // App Keys
-    private $keysets = 6;
+    private $keysets = 3;
 
     // 1
-    private $consumerKey_1 = 'GB56YcodmfbyedX5x9Ng0Zivh';
-    private $consumerSecret_1 = '6eTgxabpQjBrxZeA1wIdrsCfEEZez3flZBM6unnwuO6MsjuRyh';
-    private $oAuthToken_1 = '856985557385269248-GJ02EjTKodYEFantX90ARhJY1ZiiJFe';
-    private $oAuthSecret_1 = '5T5khxcai72db7crbeudVY4z2lw0qgExQqu2dKd2xnk2F';
+    private $consumerKey_1 = 'xWiTUMZfrqFlakjlQpKHXWMka';
+    private $consumerSecret_1 = 'z5OsT09Qv7B6jpLlHtx5Hh3nwIzgaSjDP8oI1V6fdBybv08tsX';
+    private $oAuthToken_1 = '2688125125-VfKk6GU0NRIuWfFkbr46x17cUHMleS1r2hlZEjM';
+    private $oAuthSecret_1 = 'XrOHlFHAYYOZVXgVjnij1p7nERCTKga4IyAwW8lFdSZcw';
 
     // 2
-    private $consumerKey_2 = 'ifsO6DHghG5a9lBDV9W9EEuLM';
-    private $consumerSecret_2 = 'zBYlOzanoTmjC7TULY3ndOkmo5Ahagzzku8MmwzzpAFgxzwH7Q';
-    private $oAuthToken_2 = '856985557385269248-RTJCkfmNOJb1qBzERECGWecWY3hbzxZ';
-    private $oAuthSecret_2 = 'cvZ8adXSECMl7VLorCoNA4mWB8vhKDatlGrLQoN1aKtm7';
+    private $consumerKey_2 = '60pRYoyAAm6c9mFWfq6YTGoXB';
+    private $consumerSecret_2 = 'Fpb4W59W3wvCO6FNORbWE0HAnssyEAk4x2TquEMuTdyXcEXI1A';
+    private $oAuthToken_2 = '2688125125-44ouwSxoDvOaGloKNf5st1JP7ko0u8wCRa9eSpT';
+    private $oAuthSecret_2 = 'XbbKWEhjQA0hMIM8RdWHME1r7QKYa7ZIrsomXy5GSQy3m';
 
     // 3
-    private $consumerKey_3 = 'cbT9hdwPgCgcRH1NA0enIZTIx';
-    private $consumerSecret_3 = 'u0l9sE4rVpIQBDJXDVkXEETblfToKFpMsBwsWI2EdBcqCzaB6q';
-    private $oAuthToken_3 = '856985557385269248-IJnB0cQ1RdgRf7nYgRjTjifmM0WhyqW';
-    private $oAuthSecret_3 = 'jBPa6VmxNaXuN9EeAz1uV2OLrBQEq5YgKi7yoeLfIaNbP';
+    private $consumerKey_3 = '3gZvt1xFHEjmHgVFj66DfNa7K';
+    private $consumerSecret_3 = 'BnXybsfkQNl5AlVfr8KuoQsRWjENoHi6pvkZfnOThYQzUkCJG4';
+    private $oAuthToken_3 = '533523417-7CTtxa8S3oPL2NTd9rhRpBFZuTiZsSfvnbJISas7';
+    private $oAuthSecret_3 = 'ndYbg6gq4lEJlcHI3GW2q1pfH0uqGrNelcaxZ5eF3mNwf';
 
     // 4
-    private $consumerKey_4 = '1gjylV87gbqFOBUSD6SqerRLJ';
-    private $consumerSecret_4 = 'jhsG7nGmqqgXaFxuCbqxxuYe5CorQLPwY2ocZCHRdj8bwTLmPl';
-    private $oAuthToken_4 = '856985557385269248-4EJ35JJOjGfgKT59QTszpqocvNNwV3a';
-    private $oAuthSecret_4 = 'NOl5G00nOqUCKmRQWvADopbrQ8rrIYmkAjk7mnWjbObrC';
+    //private $consumerKey_4 = '1gjylV87gbqFOBUSD6SqerRLJ';
+    //private $consumerSecret_4 = 'jhsG7nGmqqgXaFxuCbqxxuYe5CorQLPwY2ocZCHRdj8bwTLmPl';
+    //private $oAuthToken_4 = '856985557385269248-4EJ35JJOjGfgKT59QTszpqocvNNwV3a';
+    //private $oAuthSecret_4 = 'NOl5G00nOqUCKmRQWvADopbrQ8rrIYmkAjk7mnWjbObrC';
 
     // 5
-    private $consumerKey_5 = '2hCSpVVcNEyjqmyqPUrCXbjyC';
-    private $consumerSecret_5 = 'tYwTA98FuyjUQCvRRDCw9LyKWJNVzKptrVkxAxnEeiuWVuO5hY';
-    private $oAuthToken_5 = '853915504687407104-hHHIXXlGPG39SftkLfKQpLmRlu885m1';
-    private $oAuthSecret_5 = 'lg96plhXZvzjQMlSzB3rm3DiOfxSZNdxHz5GUxQ7hwWTu';
+    //private $consumerKey_5 = '2hCSpVVcNEyjqmyqPUrCXbjyC';
+    //private $consumerSecret_5 = 'tYwTA98FuyjUQCvRRDCw9LyKWJNVzKptrVkxAxnEeiuWVuO5hY';
+    //private $oAuthToken_5 = '853915504687407104-hHHIXXlGPG39SftkLfKQpLmRlu885m1';
+    //private $oAuthSecret_5 = 'lg96plhXZvzjQMlSzB3rm3DiOfxSZNdxHz5GUxQ7hwWTu';
 
     // 6
-    private $consumerKey_6 = 'OPdLQky2F4Y94UeBIEfgzinnh';
-    private $consumerSecret_6 = 'MdUqiEeJo20AnPi1Gs8UsfsCEO2Jil0cSs48xwWG9G65B4Ujl8';
-    private $oAuthToken_6 = '2786239599-OGBWo17EHgWBExwzo37tFWK2xDLSZWeHaK2b7xl';
-    private $oAuthSecret_6 = 'ZGz2aim9PaMJFgZbHRGmrLneuIhNhp8scvdtWzYosZAV0';
+    //private $consumerKey_6 = 'OPdLQky2F4Y94UeBIEfgzinnh';
+    //private $consumerSecret_6 = 'MdUqiEeJo20AnPi1Gs8UsfsCEO2Jil0cSs48xwWG9G65B4Ujl8';
+    //private $oAuthToken_6 = '2786239599-OGBWo17EHgWBExwzo37tFWK2xDLSZWeHaK2b7xl';
+    //private $oAuthSecret_6 = 'ZGz2aim9PaMJFgZbHRGmrLneuIhNhp8scvdtWzYosZAV0';
 
     private $settings;
     private $exchange;
@@ -116,6 +116,7 @@ class TwitterInterface {
             return $this->data;
         }
     }
+	
 }
 
 /**

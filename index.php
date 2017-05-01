@@ -2,8 +2,9 @@
 	session_start();
 	$searchItems = array();
 
-	$token = generateRandomString( 20 );
-	$_SESSION['s_token'] = $token;
+	$token = md5(uniqid(rand(), TRUE));
+	$_SESSION['token'] = $token;
+	$_SESSION['token_time'] = time();
 
 	$i = 1;
 
@@ -47,17 +48,7 @@
 	function coolCheck($string) {
 		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
 	}
-
-	function generateRandomString($length = 10) {
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		$charactersLength = strlen($characters);
-		$randomString = '';
-		for ($i = 0; $i < $length; $i++) {
-			$randomString .= $characters[rand(0, $charactersLength - 1)];
-		}
-		return $randomString;
-	};
-
+	
 	function getUserIP() {
 		$ipaddress = '';
 		if (isset($_SERVER['HTTP_CLIENT_IP']))
@@ -134,7 +125,6 @@
 		<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
 
     	<link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
-		<link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
 		
 		<!-- <script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -149,13 +139,6 @@
 
 	</head>
 	<body>
-		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-		<script>
-		  (adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-1161875130168523",
-			enable_page_level_ads: true
-		  });
-		</script>
 		<div id="body-wrapper">
 			<div id="bg-img"></div>
 			<div id="bg-overlay"></div>
@@ -163,12 +146,13 @@
 			<div id="main-credits-button">
 				<h3 id="main-button-text">About</h3>
 			</div>
-			<h1 id="main-title">TweetPoll</h1>
+			<div id="main-title"><img src="/images/header_logo.png" width="100%" ></div>
 			<input type="text" name="" id="main-search-box"
 				maxlength="24" placeholder="Query the opinion harvester...">
 			<div id="searches-container">
 				<div class="search-element-group-template display-none">
 					<h2 class="search-element-search"></h2>
+					
 					<h4 class="search-element-updated"></h4>
 					<div class="search-element-bars">
 						<div class="search-element-loading">
@@ -184,7 +168,9 @@
 						<div class="search-element-cross-2"></div>
 					</div>
 					<h3 class="search-percent-green"></h3>
+					<h3 class="search-percent-green"></h3>
 					<h3 class="search-percent-red"></h3>
+					<h4 class="search-element-change"></h4>
 					<h3 class="search-element-error">The query got stuck in the straw chopper.. please try again...</h3>
 				</div>
 
@@ -192,90 +178,91 @@
 		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.0.0/jquery-migrate.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
+		
 		<script type="text/javascript">
 			var loadingMessages = [
-									"Locating renderable gigapixels",
-									"Spinning up the hamster",
-									"Shovelling coal to the server",
-									"Programming the flux capacitor",
-									"We dream about faster computers",
-									"Would you like fries with that?",
-									"Calculating gravitational constant",
-									"Forming the black hole",
-									"At least you’re not on hold",
-									"This server is powered by oranges",
-									"We’re testing your patience",
-									"Waiting for the satellite",
-									"Launching into near Earth orbit",
-									"This is faster than you could do it",
-									"Warming up Large Hadron Collider",
-									"Waiting for the abacus",
-									"The elves are having lunch",
-									"Time is an illusion",
-									"Hang on, it’s here somewhere",
-									"Measuring cable length",
-									"Re-calibrating the internet",
-									"Reconfiguring coffee machine",
-									"Paging the administrator",
-									"Counting backwards from infinity",
-									"Notifying field agents",
-									"Negotiating WiFi password",
-									"Scanning for credit cards",
-									"Adjusting for your IQ",
-									"Dividing by zero",
-									"Adding random fluctuations",
-									"Recalculating Pi",
-									"Creating universe",
-									"Caching internet locally",
-									"Time-loop inversion failed",
-									"Commencing infinite loop",
-									"Spinning wheel of fortune",
-									"Starting missile launch",
-									"Protecting the innocent",
-									"Rewinding DVDs",
-									"The internet is full.. please wait",
-									"Loading loading message",
-									"Computing chance of success",
-									"Randomising memory access",
-									"I think, therefore I am",
-									"Preparing for hyperspace jump",
-									"Adjusting bell curves",
-									"Adding hidden agendas",
-									"Aligning covariance matrices",
-									"Building data structures",
-									"Calibrating blue skies",
-									"Collecting meteor particles",
-									"Decomposing singular values",
-									"Destabilising economic indicators",
-									"Downloading terrain data",
-									"Generating jobs",
-									"Flushing pipe network",
-									"Integrating curves",
-									"Normalising power",
-									"Mixing genetic pool",
-									"Perturbing matrices",
-									"Synthesising wavelets",
-									"Time-compressing simulator clock"
-								];
+				"Locating renderable gigapixels",
+				"Spinning up the hamster",
+				"Shovelling coal to the server",
+				"Programming the flux capacitor",
+				"We dream about faster computers",
+				"Would you like fries with that?",
+				"Calculating gravitational constant",
+				"Forming the black hole",
+				"At least you’re not on hold",
+				"This server is powered by oranges",
+				"We’re testing your patience",
+				"Waiting for the satellite",
+				"Launching into near Earth orbit",
+				"This is faster than you could do it",
+				"Warming up Large Hadron Collider",
+				"Waiting for the abacus",
+				"The elves are having lunch",
+				"Time is an illusion",
+				"Hang on, it’s here somewhere",
+				"Measuring cable length",
+				"Re-calibrating the internet",
+				"Reconfiguring coffee machine",
+				"Paging the administrator",
+				"Counting backwards from infinity",
+				"Notifying field agents",
+				"Negotiating WiFi password",
+				"Scanning for credit cards",
+				"Adjusting for your IQ",
+				"Dividing by zero",
+				"Adding random fluctuations",
+				"Recalculating Pi",
+				"Creating universe",
+				"Caching internet locally",
+				"Time-loop inversion failed",
+				"Commencing infinite loop",
+				"Spinning wheel of fortune",
+				"Starting missile launch",
+				"Protecting the innocent",
+				"Rewinding DVDs",
+				"The internet is full.. please wait",
+				"Loading loading message",
+				"Computing chance of success",
+				"Randomising memory access",
+				"I think, therefore I am",
+				"Preparing for hyperspace jump",
+				"Adjusting bell curves",
+				"Adding hidden agendas",
+				"Aligning covariance matrices",
+				"Building data structures",
+				"Calibrating blue skies",
+				"Collecting meteor particles",
+				"Decomposing singular values",
+				"Destabilising economic indicators",
+				"Downloading terrain data",
+				"Generating jobs",
+				"Flushing pipe network",
+				"Integrating curves",
+				"Normalising power",
+				"Mixing genetic pool",
+				"Perturbing matrices",
+				"Synthesising wavelets",
+				"Time-compressing simulator clock"
+			];
 			var currentSearches = [];
 			var submitToken = '<?php echo $token ?>';
-			
+
 			String.prototype.replaceAll = function(search, replacement) {
 				var target = this;
 				return target.replace(new RegExp(search, 'g'), replacement);
 			};
+
 			function getRandomInt(min, max) {
-			  min = Math.ceil(min);
-			  max = Math.floor(max);
-			  return Math.floor(Math.random() * (max - min)) + min;
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min)) + min;
 			};
+
 			function createSearch(name) {
 				$('html, body').animate({
-        	scrollTop: $("#main-title").offset().top
-		    }, 1000);
-				var loadingMessage = loadingMessages[Math.floor(Math.random()*loadingMessages.length)];
+					scrollTop: $("#main-title").offset().top
+				}, 1000);
+				var loadingMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
 				var $searchBlock = $(".search-element-group-template").clone();
 				$searchBlock.removeClass("search-element-group-template");
 				$searchBlock.addClass("search-element-group");
@@ -285,17 +272,11 @@
 				$searchBlock.find(".search-element-cross").click(function() {
 					removeSearch($searchBlock);
 				});
-				$searchBlock.on('swiperight', function() {
-					removeSearch($searchBlock);
-        });
-        // Allows swiping left on the screen to close the sidebar
-        $searchBlock.on('swipeleft', function(){
-					removeSearch($searchBlock);
-        });
 				$searchBlock.removeClass("display-none");
 				animateLoad($searchBlock);
 				return $searchBlock;
 			};
+
 			function animateLoad($element) {
 				var setupTime = 400;
 				var loadingTime = getRandomInt(5000, 9000);
@@ -306,25 +287,30 @@
 					width: "100%",
 				}, setupTime);
 				$($element).find(".search-element-loading-overlay").delay(setupTime).velocity({
-						width: "80%",
-					}, {
-						duration: loadingTime,
-					});
+					width: "80%",
+				}, {
+					duration: loadingTime,
+				});
 			};
-			function animateFinish($element, greenPercent, updateTime) {
-				currentSearches.push( $element.find(".search-element-search").html() );
+
+			function animateFinish($element, greenPercent, updateTime, change) {
+				currentSearches.push($element.find(".search-element-search").html());
 				updateURL();
 				$($element).find(".search-percent-green").html(greenPercent.toString().concat("%"));
-				$($element).find(".search-percent-red").html((100-greenPercent).toString().concat("%"));
+				$($element).find(".search-percent-red").html((100 - greenPercent).toString().concat("%"));
 				$($element).find(".search-element-loading-overlay").velocity({
-						width: "100%",
-					}, {
-						duration: 400,
-					}).delay(400).fadeOut();
+					width: "100%",
+				}, {
+					duration: 400,
+				}).delay(400).fadeOut();
 				$($element).find(".search-element-loading").delay(400).fadeOut();
 				window.setTimeout(function() {
 					$($element).find(".search-element-updated").html(updateTime);
 				}, 400);
+				if (change != null) {
+					//$($element).find(".search-element-change").html(change);
+				}
+
 				$($element).find(".search-element-red").delay(400).velocity({
 					width: $($element).find(".search-percent-red").text(),
 				}, 1000);
@@ -333,7 +319,9 @@
 				}, 1000);
 				$($element).find(".search-percent-red").delay(400).fadeIn();
 				$($element).find(".search-percent-green").delay(400).fadeIn();
+				//$($element).find(".search-element-change").delay(400).fadeIn();
 			};
+
 			function searchError($element) {
 				$($element).find(".search-element-search").fadeOut();
 				$($element).find(".search-element-updated").fadeOut();
@@ -347,7 +335,8 @@
 					$($element).remove();
 				}, 4000);
 			};
-			function updateURL(){
+
+			function updateURL() {
 				var stringURL = "/";
 				for (search of currentSearches) {
 					var searchL = search.toLowerCase();
@@ -355,10 +344,11 @@
 					stringURL = stringURL + searchL + "/";
 				};
 				stringURL = stringURL.substring(0, stringURL.length - 1);
-				history.pushState(null, null, stringURL );
+				history.pushState(null, null, stringURL);
 			}
+
 			function removeSearch($element) {
-				var index = currentSearches.indexOf( $element.find(".search-element-search").html() );
+				var index = currentSearches.indexOf($element.find(".search-element-search").html());
 				if (index > -1) {
 					currentSearches.splice(index, 1);
 				}
@@ -373,9 +363,9 @@
 					$($element).remove();
 				}, 1000);
 			};
-			function submitText (value){
+
+			function submitText(value) {
 				var dataString = '&search_item=' + value + '&submit_token=' + submitToken;
-				console.log(dataString);
 				var $searchBlock = createSearch(value);
 				$.ajax({
 					type: "POST",
@@ -383,11 +373,12 @@
 					data: dataString,
 					success: function(entity) {
 						console.log(entity);
-						if ( entity.status == true ){
+						if (entity.status == true) {
 							var query = entity.query;
 							var positive = entity.positive;
 							var timeAgo = entity.timeAgo;
-							animateFinish($searchBlock, positive, timeAgo);
+							var change = entity.change;
+							animateFinish($searchBlock, positive, timeAgo, change);
 
 						} else {
 							searchError($searchBlock);
@@ -399,7 +390,6 @@
 				});
 			};
 		</script>
-		<script src="/js/ads.js"></script>
 		<script type="text/javascript">
 		$('#main-search-box').keypress(function (e) {
 				if (e.which == 13) {
@@ -420,6 +410,9 @@
 		});
 		$("#main-credits-button").click(function() {
 			window.location.href = "/credits.html";
+		});
+		$(window).on("popstate", function(e) {
+			location.reload();
 		});
 		</script>
 		<script type="text/javascript">

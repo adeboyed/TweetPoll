@@ -2,11 +2,10 @@
 	$ignore = true;
 	session_start();
 	header('Content-Type: application/json');
+
 	require_once 'Requests.php';
 	require_once 'exportClass.php' ;
 	require_once 'config.php';
-
-	define( 'SERVER_2_ADDRESS', 'http://localhost/server2/index.php' );
 
 	$serverNo = 2;
 
@@ -17,11 +16,11 @@
 
 	//CHECKING THE TOKEN
 	
-	if ( !isset( $_SESSION['s_token'] ) || !isset( $_POST['submit_token'] )  ){
+	if ( !isset( $_SESSION['token'] ) || !isset( $_POST['submit_token'] )  ){
 		errorMessage(0, null);
 	}else {
-		$tokenFromSession = $_SESSION['s_token'];
-		$tokenFromPost = filter_input(INPUT_POST, 'submit_token');
+		$tokenFromSession = $_SESSION['token'];
+		$tokenFromPost = $_POST['submit_token'];
 		
 		if ( strcmp ( $tokenFromSession, $tokenFromPost ) !== 0 ){
 			//errorMessage( $tokenFromSession . ' ' . $tokenFromPost );
@@ -38,8 +37,6 @@
 	//GETTING THE DATA AND 
 
 	$searchItem = filter_input(INPUT_POST, 'search_item');
-	$searchSize = $_POST['_size'];
-	$searchSize = intval( $searchSize );
 	$searchItem = trim( $searchItem );
 
 	if ( $searchItem == null ){
@@ -50,10 +47,6 @@
 		errorMessage( 3 , null);
 	}else if ( !coolCheck ( $searchItem ) ){
 		errorMessage( 3 , null);
-	}else if ( $searchSize === null ){
-		errorMessage( 41 , null);
-	}else if ( $searchSize == 2 || ( $searchSize < 0 && $searchSize != -238) ){
-		errorMessage( 43 , null);
 	}
 
 	$searchItem = strip_tags( $searchItem );
@@ -105,12 +98,15 @@
 			$stmtAdd->close();
 		}else {
 			$mysqli_conn->close(); 
-			var_dump( $body );
 			errorMessage(9, $body);
 		}
 	} 
 	
+	$returnItem = getDayAgo( $mysqli_conn, $returnItem );
+
 	$mysqli_conn->close();
+	
+	unset( $returnItem->errorNo );
 
 	echo json_encode( $returnItem );
 
@@ -143,8 +139,38 @@
 		return $string ? implode(', ', $string) . ' ago' : 'just now';
 	}
 
+	function getDayAgo( $mysqli_conn,  $result ){
+		$stmt = $mysqli_conn->prepare("SELECT search_result, search_time FROM search_items WHERE search_query = ? AND search_time <= now() - interval 1 day AND search_time > now() - interval 2 day ORDER BY search_time DESC LIMIT 1");
+		$stmt->bind_param('s', $result->query );
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->bind_result( $resultV, $time );
+		$stmt->fetch(); 
+
+		if ( $stmt->num_rows == 1 ){
+			$returnItem = json_decode ( $resultV );
+			$positive = $returnItem->positive;
+			
+			$change = $positive - $result->positive;
+			
+			if ( $change > 0 ){
+				$result->change = '+ ' . $change;
+			}else if ( $change == 0 ) {
+				$result->change = 'No Change';
+			}else {
+				$result->change = '- ' . ( -1 * $change );
+			}
+			$stmt->close();
+			return $result;
+		}else {
+			$result->change = '';
+			$stmt->close();
+			return $result;
+		}
+	}
+
 	function coolCheck($string) {
-		return preg_match("/^[a-zA-Z0-9\s]*$/", $string);
+		return preg_match("/^['.a-zA-Z0-9\s]*$/", $string);
 	}
 
 	function errorMessage( $messageNo, $body ){
