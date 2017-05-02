@@ -126,6 +126,8 @@
 
     	<link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
 		
+		<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=590753e075e4e1001109c1c2&product=sticky-share-buttons"></script>
+		
 		<!-- <script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

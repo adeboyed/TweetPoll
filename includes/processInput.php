@@ -7,6 +7,27 @@
 	require_once 'exportClass.php' ;
 	require_once 'config.php';
 
+	function getUserIP() {
+		$ipaddress = '';
+		if (isset($_SERVER['HTTP_CLIENT_IP']))
+			$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+		else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+			$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		else if(isset($_SERVER['HTTP_X_FORWARDED']))
+			$ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+		else if(isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']))
+			$ipaddress = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+		else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+			$ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+		else if(isset($_SERVER['HTTP_FORWARDED']))
+			$ipaddress = $_SERVER['HTTP_FORWARDED'];
+		else if(isset($_SERVER['REMOTE_ADDR']))
+			$ipaddress = $_SERVER['REMOTE_ADDR'];
+		else
+			$ipaddress = 'null';
+		return $ipaddress;
+	}
+
 	$serverNo = 2;
 
 	$backendServers = array (
@@ -74,6 +95,7 @@
 
 	if ( $stmt->num_rows == 1 ){
 		$returnItem = json_decode ( $result );
+		var_dump ( $result );
 		$returnItem->timeAgo = time_elapsed_string( $time );
 		
 		$stmt->close();
@@ -180,6 +202,10 @@
 		if ( $body != null ){
 			$class->body = $body;	
 		}
+		
+		$searchItem = filter_input(INPUT_POST, 'search_item');
+		
+		error_log( 'NO: ' . $messageNo . ' TIMESTAMP: ' . date ( 'Y-m-d H:i:s' , $_SERVER['REQUEST_TIME'] ) . ' QUERY: ' . $searchItem . ' BODY: ' . $body , 3, 'error.log' );
 		
 		$class->errorNo = $messageNo;
 		echo json_encode( $class );

@@ -131,16 +131,36 @@
 		$result->positive = 0;
 		$result->negative = 0;
 		
+		$mostPositiveTweet = null;
+		$mostPositiveScore = 0;
+		
+		$mostNegativeTweet = null;
+		$mostNegativeScore = 0;
+		
 		foreach ( $tweets as &$value ){
 			$class = $sentiment->categorise( $value );
 			$scores = $sentiment->score($value);
 			if ( $scores['neg'] > 0.40 ){
 				$result->negative++;
+				
+				if ( $scores['neg'] > $mostNegativeScore ){
+					$mostNegativeTweet = $value;
+					$mostNegativeScore = $scores['neg'];
+				}
+				
 			} 
 			if ( $scores['pos'] > 0.40  ){
 				$result->positive++;
+				
+				if ( $scores['pos'] > $mostPositiveScore ){
+					$mostPositiveTweet = $value;
+					$mostPositiveScore = $scores['pos'];
+				}
 			}
 		}
+		
+		$result->mostPositive = $mostPositiveTweet;
+		$result->mostNegative = $mostNegativeTweet;
 		
 		return $result;
 	}
